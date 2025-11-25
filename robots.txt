@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# 站点地图
+Sitemap: https://dpapyru.github.io/sitemap.xml
+
+# 禁止访问的目录（如果有）
+# Disallow: /private/
+# Disallow: /_temp/

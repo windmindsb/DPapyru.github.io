@@ -1,0 +1,80 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # 允许手动触发工作流
+  workflow_dispatch:
+
+# 设置GITHUB_TOKEN的权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 确保同时只有一个部署在运行
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # 构建作业
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies (if any)
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          else
+            echo "No package.json found, skipping npm install"
+          fi
+          
+      - name: Generate tutorial index (if needed)
+        run: |
+          if [ -f generate-index.js ]; then
+            echo "Generating tutorial index..."
+            node generate-index.js
+          else
+            echo "No generate-index.js found, skipping index generation"
+          fi
+          
+      - name: Build assets
+        run: |
+          echo "No build process needed for static site"
+          echo "Files are already in the correct format"
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+  # 部署作业
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

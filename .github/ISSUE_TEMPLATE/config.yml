@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 泰拉瑞亚Mod开发社区
+    url: https://forums.terraria.org/index.php?forums/mod-developers.27/
+    about: 访问泰拉瑞亚官方Mod开发者社区
+  - name: 💬 GitHub Discussions
+    url: https://github.com/DPapyru/DPapyru.github.io/discussions
+    about: 在GitHub Discussions中提问和讨论
+  - name: 📚 tModLoader文档
+    url: https://github.com/tModLoader/tModLoader/wiki
+    about: 查看tModLoader官方文档
