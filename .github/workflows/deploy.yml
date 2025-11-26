@@ -62,7 +62,8 @@ jobs:
         run: |
           echo "Preparing build directory for GitHub Pages"
           mkdir -p ./build
-          cp -r * ./build/
+          # 复制所有文件和目录，除了build目录本身
+          find . -maxdepth 1 -not -name "." -not -name "./build" -exec cp -r {} ./build/ \;
           rm -rf ./build/.git
           rm -rf ./build/.github
           
