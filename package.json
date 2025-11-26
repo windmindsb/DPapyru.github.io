@@ -1,0 +1,21 @@
+{
+  "name": "tmodloader-tutorial-site",
+  "version": "1.0.0",
+  "description": "泰拉瑞亚Mod制作教程网站",
+  "main": "generate-index.js",
+  "scripts": {
+    "generate-index": "node generate-index.js",
+    "build": "npm run generate-index"
+  },
+  "keywords": [
+    "tmodloader",
+    "tutorial",
+    "terraria",
+    "mod"
+  ],
+  "author": "DPapyru",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
