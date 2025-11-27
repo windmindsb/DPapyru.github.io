@@ -127,6 +127,12 @@
             color: white;
             padding: 20px;
             position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .category-header:hover {
+            background-color: #218838;
         }
         
         .category-icon {
@@ -926,6 +932,12 @@
                 // 创建分类头部
                 const categoryHeader = document.createElement('div');
                 categoryHeader.className = 'category-header';
+                
+                // 添加点击事件，链接到 folder.html 页面
+                categoryHeader.addEventListener('click', function() {
+                    window.location.href = `folder.html?path=${encodeURIComponent(categoryKey)}`;
+                });
+                
                 categoryHeader.innerHTML = `
                     <h3 class="category-title">${category.title}</h3>
                     <p class="category-description">${category.description}</p>
