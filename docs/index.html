@@ -453,33 +453,8 @@
         let DOC_CONFIG = null;
         let ALL_DOCS = [];
         
-        // 主分类配置
-        const MAIN_CATEGORIES = {
-            '入门': {
-                title: '入门',
-                description: '适合初学者的基础教程',
-                icon: '🚀',
-                order: 1
-            },
-            '进阶': {
-                title: '进阶',
-                description: '有一定基础后的进阶教程',
-                icon: '📚',
-                order: 2
-            },
-            '高级': {
-                title: '高级',
-                description: '面向有经验开发者的高级教程',
-                icon: '⚙️',
-                order: 3
-            },
-            '个人分享': {
-                title: '个人分享',
-                description: '社区成员的个人经验和技巧分享',
-                icon: '🎯',
-                order: 4
-            }
-        };
+        // 主分类配置 - 将从配置文件动态加载
+        let MAIN_CATEGORIES = {};
         
         // 主题领域配置 - 将从配置文件动态加载
         let TOPIC_AREAS = {};
@@ -500,10 +475,13 @@
                 generateQuickLinks();
                 
                 // 初始化搜索功能
-                initSearchFunctionality();
+                const searchManager = initSearchFunctionality();
                 
                 // 初始化平滑滚动
                 initSmoothScroll();
+                
+                // 如果需要，可以在这里调用搜索索引重建
+                // searchManager.rebuildIndex();
             });
         });
 
@@ -515,6 +493,21 @@
                 if (configResponse.ok) {
                     DOC_CONFIG = await configResponse.json();
                     console.log('成功加载配置文件:', DOC_CONFIG);
+                    
+                    // 从配置文件加载主分类配置
+                    if (DOC_CONFIG.categories) {
+                        MAIN_CATEGORIES = {};
+                        Object.keys(DOC_CONFIG.categories).forEach(categoryKey => {
+                            const category = DOC_CONFIG.categories[categoryKey];
+                            MAIN_CATEGORIES[categoryKey] = {
+                                title: category.title,
+                                description: category.description,
+                                icon: getCategoryIcon(categoryKey),
+                                order: getCategoryOrder(categoryKey)
+                            };
+                        });
+                        console.log('成功加载分类配置:', MAIN_CATEGORIES);
+                    }
                     
                     // 从配置文件加载主题领域配置
                     if (DOC_CONFIG.topics) {
@@ -540,8 +533,32 @@
                 DOC_CONFIG = generateDefaultConfig();
             }
             
-            // 扫描所有文档文件
-            await scanAllDocuments();
+            // 从配置文件加载文档列表，而不是扫描目录
+            await loadDocumentsFromConfig();
+        }
+
+        // 获取分类图标
+        function getCategoryIcon(categoryKey) {
+            const iconMap = {
+                '入门': '🚀',
+                '进阶': '📚',
+                '高级': '⚙️',
+                '个人分享': '🎯',
+                '怎么贡献': '🤝'
+            };
+            return iconMap[categoryKey] || '📄';
+        }
+
+        // 获取分类排序
+        function getCategoryOrder(categoryKey) {
+            const orderMap = {
+                '入门': 1,
+                '进阶': 2,
+                '高级': 3,
+                '个人分享': 4,
+                '怎么贡献': 5
+            };
+            return orderMap[categoryKey] || 999;
         }
 
         // 生成默认配置（当config.json不存在时）
@@ -553,121 +570,158 @@
                 all_files: []
             };
 
-            // 初始化分类结构
-            Object.keys(MAIN_CATEGORIES).forEach(categoryKey => {
+            // 初始化默认分类结构
+            const defaultCategories = ['入门', '进阶', '高级', '个人分享', '怎么贡献'];
+            defaultCategories.forEach(categoryKey => {
                 config.categories[categoryKey] = {
-                    title: MAIN_CATEGORIES[categoryKey].title,
-                    description: MAIN_CATEGORIES[categoryKey].description,
+                    title: categoryKey,
+                    description: `${categoryKey}相关文档`,
                     topics: {}
+                };
+                
+                // 同时初始化MAIN_CATEGORIES
+                MAIN_CATEGORIES[categoryKey] = {
+                    title: categoryKey,
+                    description: `${categoryKey}相关文档`,
+                    icon: getCategoryIcon(categoryKey),
+                    order: getCategoryOrder(categoryKey)
                 };
             });
 
-            // 如果TOPIC_AREAS为空，使用默认主题配置
-            if (Object.keys(TOPIC_AREAS).length === 0) {
-                TOPIC_AREAS = {
-                    'env': {
-                        title: '环境配置',
-                        description: '开发环境搭建和配置',
-                        icon: '🛠️',
-                        display_names: {
-                            "zh": "环境配置",
-                            "en": "Environment Setup"
-                        },
-                        aliases: ["环境配置"]
-                    },
-                    'mod-basics': {
-                        title: 'Mod基础',
-                        description: 'Mod开发的基础概念和核心API',
-                        icon: '📖',
-                        display_names: {
-                            "zh": "Mod基础",
-                            "en": "Mod Basics"
-                        },
-                        aliases: ["Mod基础"]
-                    },
-                    'items': {
-                        title: '物品系统',
-                        description: '物品、武器和装备的开发',
-                        icon: '⚔️',
-                        display_names: {
-                            "zh": "物品系统",
-                            "en": "Item System"
-                        },
-                        aliases: ["物品系统"]
-                    },
-                    'npcs': {
-                        title: 'NPC系统',
-                        description: 'NPC的创建和行为定制',
-                        icon: '👥',
-                        display_names: {
-                            "zh": "NPC系统",
-                            "en": "NPC System"
-                        },
-                        aliases: ["NPC系统"]
-                    },
-                    'world-gen': {
-                        title: '世界生成',
-                        description: '世界生成和地形修改',
-                        icon: '🌍',
-                        display_names: {
-                            "zh": "世界生成",
-                            "en": "World Generation"
-                        },
-                        aliases: ["世界生成"]
-                    },
-                    'ui': {
-                        title: 'UI界面',
-                        description: '用户界面和交互设计',
-                        icon: '🎨',
-                        display_names: {
-                            "zh": "UI界面",
-                            "en": "UI Interface"
-                        },
-                        aliases: ["UI界面"]
-                    },
-                    'networking': {
-                        title: '网络功能',
-                        description: '多人游戏和网络通信',
-                        icon: '🌐',
-                        display_names: {
-                            "zh": "网络功能",
-                            "en": "Networking"
-                        },
-                        aliases: ["网络功能"]
-                    },
-                    'advanced': {
-                        title: '高级功能',
-                        description: '高级开发技巧和优化',
-                        icon: '🔧',
-                        display_names: {
-                            "zh": "高级功能",
-                            "en": "Advanced Features"
-                        },
-                        aliases: ["高级功能"]
-                    }
-                };
-            }
+            // 初始化默认主题结构
+            const defaultTopics = [
+                {
+                    key: 'env',
+                    title: '环境配置',
+                    description: '开发环境搭建和配置',
+                    icon: '🛠️'
+                },
+                {
+                    key: 'mod-basics',
+                    title: 'Mod基础',
+                    description: 'Mod开发的基础概念和核心API',
+                    icon: '📖'
+                },
+                {
+                    key: 'items',
+                    title: '物品系统',
+                    description: '物品、武器和装备的开发',
+                    icon: '⚔️'
+                },
+                {
+                    key: 'npcs',
+                    title: 'NPC系统',
+                    description: 'NPC的创建和行为定制',
+                    icon: '👥'
+                },
+                {
+                    key: 'world-gen',
+                    title: '世界生成',
+                    description: '世界生成和地形修改',
+                    icon: '🌍'
+                },
+                {
+                    key: 'ui',
+                    title: 'UI界面',
+                    description: '用户界面和交互设计',
+                    icon: '🎨'
+                },
+                {
+                    key: 'networking',
+                    title: '网络功能',
+                    description: '多人游戏和网络通信',
+                    icon: '🌐'
+                },
+                {
+                    key: 'advanced',
+                    title: '高级功能',
+                    description: '高级开发技巧和优化',
+                    icon: '🔧'
+                }
+            ];
 
-            // 初始化主题结构
-            Object.keys(TOPIC_AREAS).forEach(topicKey => {
-                const topicArea = TOPIC_AREAS[topicKey];
-                config.topics[topicKey] = {
-                    title: topicArea.title,
-                    description: topicArea.description,
-                    icon: topicArea.icon,
-                    display_names: topicArea.display_names || {
-                        "zh": topicArea.title,
-                        "en": topicArea.title
+            defaultTopics.forEach(topic => {
+                config.topics[topic.key] = {
+                    title: topic.title,
+                    description: topic.description,
+                    icon: topic.icon,
+                    display_names: {
+                        "zh": topic.title,
+                        "en": topic.title
                     },
-                    aliases: topicArea.aliases || []
+                    aliases: [topic.title]
+                };
+                
+                // 同时初始化TOPIC_AREAS
+                TOPIC_AREAS[topic.key] = {
+                    title: topic.title,
+                    description: topic.description,
+                    icon: topic.icon,
+                    display_names: {
+                        "zh": topic.title,
+                        "en": topic.title
+                    },
+                    aliases: [topic.title]
                 };
             });
 
             return config;
         }
 
-        // 扫描所有文档文件
-        async function scanAllDocuments() {
+        // 从配置文件加载文档列表
+        async function loadDocumentsFromConfig() {
+            try {
+                // 首先尝试从配置文件加载文档列表
+                if (DOC_CONFIG && DOC_CONFIG.all_files && DOC_CONFIG.all_files.length > 0) {
+                    console.log('从配置文件加载文档列表');
+                    ALL_DOCS = [...DOC_CONFIG.all_files];
+                    
+                    // 确保每个文档都有必要的字段
+                    ALL_DOCS = ALL_DOCS.map(doc => ({
+                        filename: doc.filename,
+                        title: doc.title || doc.filename.replace('.md', ''),
+                        author: doc.author || '未知',
+                        category: doc.category || '入门',
+                        topic: doc.topic || 'mod-basics',
+                        order: parseInt(doc.order) || 999,
+                        description: doc.description || '',
+                        tags: doc.tags || [],
+                        last_updated: doc.last_updated || '未知',
+                        difficulty: doc.difficulty || 'beginner',
+                        time: doc.time || '未知'
+                    }));
+                    
+                    console.log('从配置文件加载的文档:', ALL_DOCS);
+                    return;
+                }
+                
+                // 如果配置文件中没有文档列表，尝试扫描目录
+                console.log('配置文件中没有文档列表，尝试扫描目录');
+                await scanDocumentsFromDirectory();
+                
+            } catch (error) {
+                console.error('从配置文件加载文档失败:', error);
+                // 提供一些默认文档
+                ALL_DOCS = [
+                    {
+                        filename: 'test.md',
+                        title: '测试文档',
+                        author: '小天使',
+                        category: '入门',
+                        topic: 'mod-basics',
+                        order: 1,
+                        description: '用于测试文档查看器功能的示例文档',
+                        tags: ['测试'],
+                        last_updated: '2025-11-26',
+                        difficulty: 'beginner',
+                        time: '30分钟'
+                    }
+                ];
+            }
+        }
+
+        // 扫描目录获取文档列表（备用方法）
+        async function scanDocumentsFromDirectory() {
             try {
                 // 获取docs目录下的所有.md文件
                 const docsResponse = await fetch('./');
@@ -707,9 +761,6 @@
                                 };
                                 
                                 ALL_DOCS.push(docInfo);
-                                
-                                // 更新配置
-                                updateConfigWithDocument(docInfo);
                             }
                         } catch (error) {
                             console.warn(`无法处理文档 ${filename}:`, error);
@@ -729,22 +780,7 @@
                 
             } catch (error) {
                 console.error('扫描文档失败:', error);
-                // 提供一些默认文档
-                ALL_DOCS = [
-                    {
-                        filename: 'test.md',
-                        title: '测试文档',
-                        author: 'DPapyru',
-                        category: '入门',
-                        topic: 'mod-basics',
-                        order: 1,
-                        description: '用于测试文档查看器功能的示例文档',
-                        tags: ['测试'],
-                        last_updated: '2025-11-26',
-                        difficulty: 'beginner',
-                        time: '30分钟'
-                    }
-                ];
+                throw error;
             }
         }
 
@@ -869,8 +905,13 @@
             // 清空现有内容
             categoryGrid.innerHTML = '';
             
+            // 获取所有分类并按排序
+            const sortedCategories = Object.keys(MAIN_CATEGORIES).sort((a, b) => {
+                return MAIN_CATEGORIES[a].order - MAIN_CATEGORIES[b].order;
+            });
+            
             // 按分类顺序生成卡片
-            Object.keys(MAIN_CATEGORIES).forEach(categoryKey => {
+            sortedCategories.forEach(categoryKey => {
                 const category = MAIN_CATEGORIES[categoryKey];
                 
                 // 获取该分类下的所有文档
@@ -986,27 +1027,37 @@
             if (!searchInput || !searchButton || !searchResults) return;
             
             // 创建搜索索引
-            const searchIndex = [];
+            let searchIndex = [];
             
-            // 使用 ALL_DOCS 构建搜索索引
-            ALL_DOCS.forEach(doc => {
-                const category = MAIN_CATEGORIES[doc.category];
+            // 构建搜索索引的函数
+            function buildSearchIndex() {
+                searchIndex = [];
                 
-                // 使用新的辅助函数查找主题信息
-                const topic = findTopicInfo(doc.topic);
-                
-                searchIndex.push({
-                    title: doc.title,
-                    filename: doc.filename,
-                    category: category ? category.title : doc.category,
-                    topic: getTopicDisplayName(topic) || doc.topic,
-                    author: doc.author,
-                    description: doc.description,
-                    tags: doc.tags ? doc.tags.join(', ') : '',
-                    difficulty: doc.difficulty,
-                    time: doc.time
+                // 使用 ALL_DOCS 构建搜索索引
+                ALL_DOCS.forEach(doc => {
+                    const category = MAIN_CATEGORIES[doc.category];
+                    
+                    // 使用新的辅助函数查找主题信息
+                    const topic = findTopicInfo(doc.topic);
+                    
+                    searchIndex.push({
+                        title: doc.title,
+                        filename: doc.filename,
+                        category: category ? category.title : doc.category,
+                        topic: getTopicDisplayName(topic) || doc.topic,
+                        author: doc.author,
+                        description: doc.description,
+                        tags: doc.tags ? doc.tags.join(', ') : '',
+                        difficulty: doc.difficulty,
+                        time: doc.time
+                    });
                 });
-            });
+                
+                console.log('搜索索引已构建:', searchIndex);
+            }
+            
+            // 初始构建搜索索引
+            buildSearchIndex();
             
             // 搜索输入事件
             searchInput.addEventListener('input', function() {
@@ -1109,6 +1160,11 @@
                     displaySearchResults(results);
                 }
             }
+            
+            // 返回一个对象，允许外部更新搜索索引
+            return {
+                rebuildIndex: buildSearchIndex
+            };
         }
 
         // 生成快速链接

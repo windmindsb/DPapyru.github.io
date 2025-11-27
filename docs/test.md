@@ -1,7 +1,7 @@
 ---
 title: 测试文档
 author: 小天使
-category: 入门
+category: 高级
 topic: mod-basics
 order: 1
 difficulty: beginner

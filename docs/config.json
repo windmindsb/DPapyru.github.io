@@ -10,11 +10,11 @@
           "files": [
             {
               "filename": "DPapyru-ForNewModder.md",
-              "title": "给新人的入门教学",
+              "title": "给新人的入门建议",
               "author": "小天使",
               "order": 1,
-              "description": "用于测试文档查看器功能的示例文档",
-              "last_updated": "2025-11-26"
+              "description": "给新人的入门建议",
+              "last_updated": "2025-11-27"
             },
             {
               "filename": "test-navigation.md",
@@ -23,14 +23,6 @@
               "order": 1,
               "description": "用于测试基于元数据的导航功能",
               "last_updated": "2025-11-27"
-            },
-            {
-              "filename": "test.md",
-              "title": "测试文档",
-              "author": "小天使",
-              "order": 1,
-              "description": "用于测试文档查看器功能的示例文档",
-              "last_updated": "2025-11-26"
             }
           ]
         }
@@ -44,7 +36,27 @@
     "高级": {
       "title": "高级",
       "description": "面向有经验开发者的高级教程",
-      "topics": {}
+      "topics": {
+        "advanced": {
+          "title": "高级功能",
+          "description": "高级开发技巧和优化",
+          "files": []
+        },
+        "mod-basics": {
+          "title": "Mod基础",
+          "description": "Mod开发的基础概念和核心API",
+          "files": [
+            {
+              "filename": "test.md",
+              "title": "测试文档",
+              "author": "小天使",
+              "order": 1,
+              "description": "用于测试文档查看器功能的示例文档",
+              "last_updated": "2025-11-26"
+            }
+          ]
+        }
+      }
     },
     "个人分享": {
       "title": "个人分享",
@@ -53,16 +65,7 @@
         "advanced": {
           "title": "高级功能",
           "description": "高级开发技巧和优化",
-          "files": [
-            {
-              "filename": "TopicSystemGuide.md",
-              "title": "Topic 系统使用指南",
-              "author": "小天使",
-              "order": 1,
-              "description": "详细介绍Topic系统的使用方法和最佳实践",
-              "last_updated": "2025-11-27"
-            }
-          ]
+          "files": []
         }
       }
     },
@@ -222,7 +225,7 @@
     },
     {
       "filename": "DPapyru-ForNewModder.md",
-      "title": "给新人的入门教学",
+      "title": "给新人的入门建议",
       "author": "小天使",
       "category": "入门",
       "topic": "mod-basics",
@@ -240,7 +243,7 @@
       "filename": "test.md",
       "title": "测试文档",
       "author": "小天使",
-      "category": "入门",
+      "category": "高级",
       "topic": "mod-basics",
       "order": 1
     },

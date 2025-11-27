@@ -205,21 +205,54 @@ function getDifficultyText(difficulty) {
 // 更新config.json数据的函数
 function updateConfigData() {
     // 获取当前docs目录中所有实际存在的Markdown文件
-    const existingFiles = new Set(files);
+    const currentFiles = fs.readdirSync(docsDir).filter(file => file.endsWith('.md') && file !== 'tutorial-index.md');
+    const existingFiles = new Set(currentFiles);
     
-    // 清理categories中的无效文件记录
+    // 创建文件到正确类别的映射表
+    const fileToCorrectCategory = {};
+    
+    // 首先解析所有文件的元数据，确定每个文件应该属于哪个类别
+    currentFiles.forEach(file => {
+        try {
+            const content = fs.readFileSync(path.join(docsDir, file), 'utf8');
+            const metadata = parseMetadata(content);
+            
+            // 确定类别
+            let category = metadata.category || '资源参考';
+            // 将英文类别映射到中文
+            const categoryMapping = {
+                'getting-started': '入门',
+                'basic-concepts': '基础概念',
+                'mod-development': 'Mod开发',
+                'advanced-topics': '高级主题',
+                'resources': '资源参考'
+            };
+            category = categoryMapping[category] || category;
+            
+            fileToCorrectCategory[file] = category;
+        } catch (error) {
+            console.error(`解析文件 ${file} 时出错:`, error.message);
+            fileToCorrectCategory[file] = '资源参考'; // 默认类别
+        }
+    });
+    
+    // 清理categories中的无效文件记录和错误分类的文件
     if (configData.categories) {
         Object.keys(configData.categories).forEach(category => {
             if (configData.categories[category].topics) {
                 Object.keys(configData.categories[category].topics).forEach(topic => {
                     if (configData.categories[category].topics[topic].files) {
-                        // 过滤掉无效的文件记录
+                        // 过滤掉无效的文件记录和错误分类的文件
                         configData.categories[category].topics[topic].files =
                             configData.categories[category].topics[topic].files.filter(fileObj => {
                                 // 检查文件对象是否有效且文件实际存在
-                                return fileObj &&
-                                       fileObj.filename &&
-                                       existingFiles.has(fileObj.filename);
+                                if (!fileObj || !fileObj.filename || !existingFiles.has(fileObj.filename)) {
+                                    return false;
+                                }
+                                
+                                // 检查文件是否属于当前类别（防止文件出现在错误的类别中）
+                                const correctCategory = fileToCorrectCategory[fileObj.filename];
+                                return correctCategory === category;
                             });
                     }
                 });

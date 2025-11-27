@@ -4,7 +4,7 @@ difficulty: beginner
 time: 5分钟
 author: 小天使
 date: 2025-11-27
-category: 入门
+category: 进阶
 topic: mod-basics
 order: 1
 description: 用于测试基于元数据的导航功能
