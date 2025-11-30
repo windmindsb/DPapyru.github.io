@@ -683,6 +683,9 @@ class TutorialSearch {
         const content = item.content.toLowerCase();
         const description = item.description.toLowerCase();
         const category = item.category.toLowerCase();
+
+        // 把搜索的查询也转换为小写
+        searchQuery = searchQuery.toLowerCase();
         
         // 收集所有搜索词
         const allTerms = [

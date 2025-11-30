@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- 文件夹内容显示页面 -->
+<!-- 模块化文件夹内容显示页面 -->
 <html lang="zh-CN">
 
 <head>
@@ -17,7 +17,16 @@
     <meta property="og:title" content="文件夹内容 - 泰拉瑞亚Mod制作教程">
     <meta property="og:description" content="泰拉瑞亚Mod制作教程文档文件夹内容，提供特定文件夹下的所有文档列表">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://dpapyru.github.io/docs/folder.html">
+    <meta property="og:url" content="https://dpapyru.github.io/docs/folder-modular.html">
+    
+    <!-- 主题切换脚本 - 早期加载以避免闪烁 -->
+    <script>
+        // 主题切换早期加载脚本 - 防止页面加载时主题闪烁
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     
     <!-- 样式和图标 -->
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -220,6 +229,34 @@
             background-color: #0056b3;
         }
         
+        .search-history {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .search-history-title {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .search-history-item {
+            background-color: #e9ecef;
+            color: #495057;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .search-history-item:hover {
+            background-color: #dee2e6;
+        }
+        
         .doc-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -390,42 +427,6 @@
             background-color: #5a6268;
         }
         
-        .search-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-        }
-        
-        .search-result-item {
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        
-        .search-result-item:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .search-result-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .search-result-meta {
-            font-size: 0.85rem;
-            color: #666;
-        }
-        
         /* 响应式设计 */
         @media (max-width: 768px) {
             .folder-hero h1 {
@@ -442,6 +443,15 @@
             
             .folder-title {
                 font-size: 1.5rem;
+            }
+            
+            .filter-container {
+                flex-direction: column;
+            }
+            
+            .view-toggle {
+                margin-left: 0;
+                margin-top: 10px;
             }
         }
     </style>
@@ -547,7 +557,12 @@
                     <div class="search-container">
                         <input type="text" id="doc-search" class="search-input" placeholder="搜索此文件夹下的文档..." autocomplete="off">
                         <button class="search-button" id="search-btn">🔍</button>
-                        <div class="search-results" id="search-results"></div>
+                    </div>
+                    
+                    <!-- 搜索历史 -->
+                    <div class="search-history" id="search-history">
+                        <div class="search-history-title">最近搜索:</div>
+                        <!-- 搜索历史项将通过JavaScript动态生成 -->
                     </div>
                 </div>
 
@@ -604,237 +619,283 @@
     </footer>
 
     <!-- 加载JavaScript文件 -->
+    <script src="../assets/js/theme-toggle.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/search.js"></script>
     <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/modules/app-controller.js"></script>
     
+    <!-- 模块化文件夹页面专用脚本 -->
     <script>
-        // 文档配置和元数据管理
-        let DOC_CONFIG = null;
-        let ALL_DOCS = [];
-        let FOLDER_DOCS = [];
-        let CURRENT_FOLDER = '';
-        
-        // 页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('=== docs/folder.html: 页面加载完成 ===');
-            
-            // 初始化移动端菜单
-            initMobileMenu();
-            
-            // 获取URL参数中的文件夹路径
-            const folderPath = getFolderPathFromURL();
-            CURRENT_FOLDER = folderPath;
-            
-            // 初始化文档配置
-            initializeDocumentConfig().then(() => {
-                // 筛选当前文件夹的文档
-                filterDocumentsByFolder(folderPath);
-                
-                // 生成面包屑导航
-                generateBreadcrumb(folderPath);
-                
-                // 生成文件夹标题和描述
-                generateFolderHeader(folderPath);
-                
-                // 生成文档列表
-                generateDocumentGrid();
-                
-                // 初始化搜索功能
-                initSearchFunctionality();
-            });
-        });
-
-        // 从URL参数获取文件夹路径
-        function getFolderPathFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('path') || '';
-        }
-
-        // 初始化文档配置
-        async function initializeDocumentConfig() {
-            try {
-                // 尝试加载配置文件
-                const configResponse = await fetch('./config.json');
-                if (configResponse.ok) {
-                    DOC_CONFIG = await configResponse.json();
-                    console.log('成功加载配置文件:', DOC_CONFIG);
-                } else {
-                    console.warn('配置文件不存在，使用默认配置');
-                    DOC_CONFIG = generateDefaultConfig();
-                }
-            } catch (error) {
-                console.warn('加载配置文件失败，使用默认配置:', error);
-                DOC_CONFIG = generateDefaultConfig();
+        // 模块化文件夹页面控制器
+        class ModularFolderPage {
+            constructor() {
+                this.currentFolder = '';
+                this.filteredDocuments = [];
+                this.isGridView = true;
+                this.init();
             }
-            
-            // 从配置文件加载文档列表
-            await loadDocumentsFromConfig();
-        }
-
-        // 生成默认配置（当config.json不存在时）
-        function generateDefaultConfig() {
-            const config = {
-                categories: {},
-                topics: {},
-                authors: {},
-                all_files: []
-            };
-            return config;
-        }
-
-        // 从配置文件加载文档列表
-        async function loadDocumentsFromConfig() {
-            try {
-                // 首先尝试从配置文件加载文档列表
-                if (DOC_CONFIG && DOC_CONFIG.all_files && DOC_CONFIG.all_files.length > 0) {
-                    console.log('从配置文件加载文档列表');
-                    ALL_DOCS = [...DOC_CONFIG.all_files];
-                    
-                    // 确保每个文档都有必要的字段
-                    ALL_DOCS = ALL_DOCS.map(doc => ({
-                        filename: doc.filename,
-                        title: doc.title || doc.filename.replace('.md', ''),
-                        author: doc.author || '未知',
-                        category: doc.category || '入门',
-                        topic: doc.topic || 'mod-basics',
-                        order: parseInt(doc.order) || 999,
-                        description: doc.description || '',
-                        tags: doc.tags || [],
-                        last_updated: doc.last_updated || '未知',
-                        difficulty: doc.difficulty || 'beginner',
-                        path: doc.path || doc.filename
-                    }));
-                    
-                    console.log('从配置文件加载的文档:', ALL_DOCS);
+ 
+            // 初始化
+            async init() {
+                // 等待应用初始化完成
+                if (window.app) {
+                    await this.waitForAppInitialization();
+                }
+                
+                this.initializeFromURL();
+                this.bindEvents();
+                this.loadFolderContent();
+            }
+ 
+            // 等待应用初始化完成
+            async waitForAppInitialization() {
+                return new Promise((resolve) => {
+                    const checkInitialization = () => {
+                        if (window.app.isInitialized) {
+                            resolve();
+                        } else {
+                            setTimeout(checkInitialization, 100);
+                        }
+                    };
+                    checkInitialization();
+                });
+            }
+ 
+            // 从URL初始化
+            initializeFromURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+                this.currentFolder = urlParams.get('path') || '';
+            }
+ 
+            // 绑定事件
+            bindEvents() {
+                // 搜索输入事件
+                const searchInput = document.getElementById('doc-search');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        this.handleSearchInput(e.target.value);
+                    });
+                }
+ 
+                // 搜索按钮点击事件
+                const searchButton = document.getElementById('search-btn');
+                if (searchButton) {
+                    searchButton.addEventListener('click', () => {
+                        this.performSearch();
+                    });
+                }
+ 
+                // 视图切换按钮
+                const gridViewBtn = document.getElementById('grid-view-btn');
+                const listViewBtn = document.getElementById('list-view-btn');
+                
+                if (gridViewBtn) {
+                    gridViewBtn.addEventListener('click', () => {
+                        this.setViewMode('grid');
+                    });
+                }
+                
+                if (listViewBtn) {
+                    listViewBtn.addEventListener('click', () => {
+                        this.setViewMode('list');
+                    });
+                }
+ 
+                // 过滤器变化事件
+                const filterSelects = document.querySelectorAll('.filter-select');
+                filterSelects.forEach(select => {
+                    select.addEventListener('change', () => {
+                        this.applyFilters();
+                    });
+                });
+ 
+                // 监听应用事件
+                document.addEventListener('searchInput', (e) => {
+                    this.handleSearchInput(e.detail.query);
+                });
+            }
+ 
+            // 加载文件夹内容
+            async loadFolderContent() {
+                const folderManager = window.app.getModule('folderManager');
+                if (folderManager) {
+                    folderManager.setCurrentFolder(this.currentFolder);
+                    this.filteredDocuments = folderManager.filteredDocuments;
+                    this.updateBreadcrumb();
+                    this.updateFolderHeader();
+                    this.populateFilterOptions();
+                    this.generateDocumentGrid();
+                } else {
+                    // 如果文件夹管理器不可用，使用配置管理器
+                    await this.loadFolderContentFromConfig();
+                }
+            }
+ 
+            // 从配置管理器加载文件夹内容
+            async loadFolderContentFromConfig() {
+                const configManager = window.app.getModule('configManager');
+                if (!configManager) return;
+                
+                await configManager.loadConfig();
+                const allDocs = configManager.getAllFiles();
+                
+                if (!this.currentFolder) {
+                    this.filteredDocuments = [...allDocs];
+                } else {
+                    this.filteredDocuments = allDocs.filter(doc => {
+                        if (!doc.path) return false;
+                        const pathParts = doc.path.split('/');
+                        return pathParts.includes(this.currentFolder);
+                    });
+                }
+                
+                this.updateBreadcrumb();
+                this.updateFolderHeader();
+                this.populateFilterOptions();
+                this.generateDocumentGrid();
+            }
+ 
+            // 处理搜索输入
+            handleSearchInput(query) {
+                if (!query || query.trim() === '') {
+                    this.generateDocumentGrid();
                     return;
                 }
-            } catch (error) {
-                console.error('从配置文件加载文档失败:', error);
-                ALL_DOCS = [];
+ 
+                const results = this.performSearch(query);
+                this.generateDocumentGrid(results);
             }
-        }
-
-        // 根据文件夹路径筛选文档
-        function filterDocumentsByFolder(folderPath) {
-            if (!folderPath) {
-                console.warn('未提供文件夹路径');
-                FOLDER_DOCS = [];
-                return;
-            }
-            
-            console.log(`筛选文件夹 "${folderPath}" 下的文档`);
-            
-            // 筛选路径包含指定文件夹的文档
-            FOLDER_DOCS = ALL_DOCS.filter(doc => {
-                if (!doc.path) return false;
+ 
+            // 执行搜索
+            performSearch(query) {
+                const searchManager = window.app.getModule('searchManager');
+                if (!searchManager) {
+                    // 简单的本地搜索
+                    return this.filteredDocuments.filter(doc =>
+                        doc.title.toLowerCase().includes(query.toLowerCase()) ||
+                        doc.description.toLowerCase().includes(query.toLowerCase()) ||
+                        doc.author.toLowerCase().includes(query.toLowerCase())
+                    );
+                }
                 
-                // 检查路径是否包含指定的文件夹路径
-                const pathParts = doc.path.split('/');
-                return pathParts.includes(folderPath);
-            });
-            
-            console.log(`找到 ${FOLDER_DOCS.length} 个文档:`, FOLDER_DOCS);
-        }
-
-        // 生成面包屑导航
-        function generateBreadcrumb(folderPath) {
-            const breadcrumb = document.getElementById('breadcrumb');
-            
-            if (!breadcrumb) return;
-            
-            breadcrumb.innerHTML = '';
-            
-            // 首页链接
-            const homeItem = document.createElement('div');
-            homeItem.className = 'breadcrumb-item';
-            homeItem.innerHTML = '<a href="../index.html">首页</a>';
-            breadcrumb.appendChild(homeItem);
-            
-            // 文档首页链接
-            const docsItem = document.createElement('div');
-            docsItem.className = 'breadcrumb-item';
-            docsItem.innerHTML = '<a href="index.html">文档</a>';
-            breadcrumb.appendChild(docsItem);
-            
-            // 当前文件夹
-            if (folderPath) {
-                const folderItem = document.createElement('div');
-                folderItem.className = 'breadcrumb-item active';
-                folderItem.textContent = folderPath;
-                breadcrumb.appendChild(folderItem);
+                return searchManager.search(query).filter(doc => {
+                    if (!this.currentFolder) return true;
+                    const pathParts = doc.path.split('/');
+                    return pathParts.includes(this.currentFolder);
+                });
             }
-        }
-
-        // 生成文件夹标题和描述
-        function generateFolderHeader(folderPath) {
-            const folderHeader = document.getElementById('folder-header');
-            
-            if (!folderHeader) return;
-            
-            if (!folderPath) {
-                folderHeader.innerHTML = `
-                    <h2 class="folder-title">未指定文件夹</h2>
-                    <p class="folder-description">请在URL参数中指定要查看的文件夹路径，例如: folder.html?path=Modder入门</p>
-                `;
-                return;
+ 
+            // 应用过滤器
+            applyFilters() {
+                const difficultyFilter = document.getElementById('difficulty-filter')?.value;
+                const categoryFilter = document.getElementById('category-filter')?.value;
+                const authorFilter = document.getElementById('author-filter')?.value;
+                const sortFilter = document.getElementById('sort-filter')?.value;
+ 
+                let results = [...this.filteredDocuments];
+ 
+                if (difficultyFilter && difficultyFilter !== 'all') {
+                    results = results.filter(doc => doc.difficulty === difficultyFilter);
+                }
+ 
+                if (categoryFilter && categoryFilter !== 'all') {
+                    results = results.filter(doc => doc.category === categoryFilter);
+                }
+ 
+                if (authorFilter && authorFilter !== 'all') {
+                    results = results.filter(doc => doc.author === authorFilter);
+                }
+ 
+                // 排序
+                results = this.sortDocuments(results, sortFilter);
+ 
+                this.generateDocumentGrid(results);
             }
-            
-            // 尝试从配置中获取文件夹信息
-            let folderDescription = '';
-            
-            // 检查是否是分类名称
-            if (DOC_CONFIG.categories && DOC_CONFIG.categories[folderPath]) {
-                folderDescription = DOC_CONFIG.categories[folderPath].description || '';
+ 
+            // 排序文档
+            sortDocuments(documents, sortBy) {
+                if (!sortBy) sortBy = 'order';
+ 
+                return [...documents].sort((a, b) => {
+                    if (sortBy === 'title') {
+                        return a.title.localeCompare(b.title);
+                    } else if (sortBy === 'author') {
+                        return a.author.localeCompare(b.author);
+                    } else if (sortBy === 'last_updated') {
+                        return new Date(b.last_updated || 0) - new Date(a.last_updated || 0);
+                    } else {
+                        return (a.order || 999) - (b.order || 999);
+                    }
+                });
             }
-            
-            // 生成文件夹标题和描述
-            folderHeader.innerHTML = `
-                <h2 class="folder-title">${folderPath}</h2>
-                <p class="folder-description">${folderDescription || `浏览 "${folderPath}" 文件夹下的所有文档`}</p>
-            `;
-        }
-
-        // 生成文档列表
-        function generateDocumentGrid() {
-            const docGrid = document.getElementById('doc-grid');
-            const noDocs = document.getElementById('no-docs');
-            
-            if (!docGrid || !noDocs) return;
-            
-            // 清空现有内容
-            docGrid.innerHTML = '';
-            
-            if (FOLDER_DOCS.length === 0) {
-                // 显示无文档提示
-                docGrid.style.display = 'none';
-                noDocs.style.display = 'block';
-                return;
+ 
+            // 设置视图模式
+            setViewMode(mode) {
+                this.isGridView = mode === 'grid';
+                const docGrid = document.getElementById('doc-grid');
+                const gridViewBtn = document.getElementById('grid-view-btn');
+                const listViewBtn = document.getElementById('list-view-btn');
+ 
+                if (docGrid) {
+                    if (mode === 'list') {
+                        docGrid.classList.add('list-view');
+                    } else {
+                        docGrid.classList.remove('list-view');
+                    }
+                }
+ 
+                if (gridViewBtn && listViewBtn) {
+                    if (mode === 'grid') {
+                        gridViewBtn.classList.add('active');
+                        listViewBtn.classList.remove('active');
+                    } else {
+                        gridViewBtn.classList.remove('active');
+                        listViewBtn.classList.add('active');
+                    }
+                }
+ 
+                // 保存偏好
+                localStorage.setItem('folder-view-mode', mode);
             }
-            
-            // 显示文档网格
-            docGrid.style.display = 'grid';
-            noDocs.style.display = 'none';
-            
-            // 按排序字段排序文档
-            const sortedDocs = [...FOLDER_DOCS].sort((a, b) => {
-                return a.order - b.order;
-            });
-            
-            // 生成文档卡片
-            sortedDocs.forEach(doc => {
+ 
+            // 生成文档网格
+            generateDocumentGrid(documents = this.filteredDocuments) {
+                const docGrid = document.getElementById('doc-grid');
+                const noDocs = document.getElementById('no-docs');
+ 
+                if (!docGrid || !noDocs) return;
+ 
+                docGrid.innerHTML = '';
+ 
+                if (documents.length === 0) {
+                    docGrid.style.display = 'none';
+                    noDocs.style.display = 'block';
+                    return;
+                }
+ 
+                docGrid.style.display = 'grid';
+                noDocs.style.display = 'none';
+ 
+                documents.forEach(doc => {
+                    const docCard = this.createDocumentCard(doc);
+                    docGrid.appendChild(docCard);
+                });
+            }
+ 
+            // 创建文档卡片
+            createDocumentCard(doc) {
                 const docCard = document.createElement('div');
                 docCard.className = 'doc-card';
-                
+ 
                 const difficultyClass = doc.difficulty === 'all' ? 'beginner' : doc.difficulty;
-                const difficultyText = getDifficultyText(doc.difficulty);
-                
-                // 生成标签HTML
+                const difficultyText = this.getDifficultyText(doc.difficulty);
+ 
                 let tagsHtml = '';
                 if (doc.tags && doc.tags.length > 0) {
                     tagsHtml = doc.tags.map(tag => `<span class="doc-tag">${tag}</span>`).join('');
                 }
-                
+ 
                 docCard.innerHTML = `
                     <div class="doc-card-header">
                         <h3 class="doc-title">${doc.title}</h3>
@@ -859,206 +920,103 @@
                         <a href="viewer.html?file=${doc.path}" class="doc-link">查看文档</a>
                     </div>
                 `;
-                
-                docGrid.appendChild(docCard);
-            });
-        }
-
-        // 获取难度文本
-        function getDifficultyText(difficulty) {
-            const difficultyMap = {
-                'beginner': '初级',
-                'intermediate': '中级',
-                'advanced': '高级',
-                'all': '全部级别'
-            };
-            return difficultyMap[difficulty] || difficulty;
-        }
-
-        // 初始化搜索功能
-        function initSearchFunctionality() {
-            const searchInput = document.getElementById('doc-search');
-            const searchButton = document.getElementById('search-btn');
-            const searchResults = document.getElementById('search-results');
-            
-            if (!searchInput || !searchButton || !searchResults) return;
-            
-            // 搜索输入事件
-            searchInput.addEventListener('input', function() {
-                const query = this.value.trim().toLowerCase();
-                
-                if (query.length === 0) {
-                    // 显示所有文档
-                    generateDocumentGrid();
-                    searchResults.style.display = 'none';
+ 
+                return docCard;
+            }
+ 
+            // 更新面包屑导航
+            updateBreadcrumb() {
+                const breadcrumb = document.getElementById('breadcrumb');
+                if (!breadcrumb) return;
+ 
+                breadcrumb.innerHTML = `
+                    <div class="breadcrumb-item">
+                        <a href="../index.html">首页</a>
+                    </div>
+                    <div class="breadcrumb-item">
+                        <a href="index.html">文档</a>
+                    </div>
+                    ${this.currentFolder ? `
+                        <div class="breadcrumb-item active">${this.currentFolder}</div>
+                    ` : ''}
+                `;
+            }
+ 
+            // 更新文件夹标题和描述
+            updateFolderHeader() {
+                const folderHeader = document.getElementById('folder-header');
+                if (!folderHeader) return;
+ 
+                if (!this.currentFolder) {
+                    folderHeader.innerHTML = `
+                        <h2 class="folder-title">所有文档</h2>
+                        <p class="folder-description">浏览所有可用的文档，快速找到您需要的学习资源</p>
+                    `;
                     return;
                 }
+ 
+                const configManager = window.app.getModule('configManager');
+                let folderDescription = '';
                 
-                // 过滤搜索结果
-                const results = FOLDER_DOCS.filter(doc =>
-                    doc.title.toLowerCase().includes(query) ||
-                    doc.author.toLowerCase().includes(query) ||
-                    (doc.description && doc.description.toLowerCase().includes(query)) ||
-                    (doc.tags && doc.tags.some(tag => tag.toLowerCase().includes(query)))
-                );
-                
-                // 显示搜索结果
-                displaySearchResults(results);
-                updateDocumentGrid(results);
-            });
-            
-            // 搜索按钮点击事件
-            searchButton.addEventListener('click', function() {
-                const query = searchInput.value.trim();
-                if (query) {
-                    performSearch(query);
-                }
-            });
-            
-            // 搜索输入框回车事件
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const query = this.value.trim();
-                    if (query) {
-                        performSearch(query);
+                if (configManager) {
+                    const category = configManager.getCategory(this.currentFolder);
+                    if (category) {
+                        folderDescription = category.description || '';
                     }
                 }
-            });
-            
-            // 点击其他地方关闭搜索结果
-            document.addEventListener('click', function(e) {
-                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                    searchResults.style.display = 'none';
-                }
-            });
-            
-            // 显示搜索结果
-            function displaySearchResults(results) {
-                searchResults.innerHTML = '';
-                
-                if (results.length === 0) {
-                    searchResults.innerHTML = `
-                        <div class="search-result-item">
-                            <div class="search-result-title">没有找到匹配的文档</div>
-                            <div class="search-result-meta">请尝试其他关键词</div>
-                        </div>
-                    `;
-                } else {
-                    results.forEach(result => {
-                        const resultItem = document.createElement('div');
-                        resultItem.className = 'search-result-item';
-                        
-                        resultItem.innerHTML = `
-                            <div class="search-result-title">${result.title}</div>
-                            <div class="search-result-meta">作者: ${result.author} | 更新: ${result.last_updated}</div>
-                        `;
-                        
-                        resultItem.addEventListener('click', function() {
-                            window.location.href = `viewer.html?file=${result.path}`;
-                        });
-                        
-                        searchResults.appendChild(resultItem);
+ 
+                folderHeader.innerHTML = `
+                    <h2 class="folder-title">${this.currentFolder}</h2>
+                    <p class="folder-description">${folderDescription || `浏览 "${this.currentFolder}" 文件夹下的所有文档`}</p>
+                `;
+            }
+ 
+            // 填充过滤器选项
+            populateFilterOptions() {
+                const configManager = window.app.getModule('configManager');
+                if (!configManager) return;
+ 
+                // 填充分类过滤器
+                const categoryFilter = document.getElementById('category-filter');
+                if (categoryFilter) {
+                    const categories = configManager.getSortedCategories();
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.key;
+                        option.textContent = category.title;
+                        categoryFilter.appendChild(option);
                     });
                 }
-                
-                searchResults.style.display = 'block';
-            }
-            
-            // 更新文档网格
-            function updateDocumentGrid(results) {
-                const docGrid = document.getElementById('doc-grid');
-                const noDocs = document.getElementById('no-docs');
-                
-                if (!docGrid || !noDocs) return;
-                
-                // 清空现有内容
-                docGrid.innerHTML = '';
-                
-                if (results.length === 0) {
-                    // 显示无文档提示
-                    docGrid.style.display = 'none';
-                    noDocs.style.display = 'block';
-                    noDocs.innerHTML = `
-                        <div class="no-docs-icon">🔍</div>
-                        <h3>没有找到匹配的文档</h3>
-                        <p>没有找到与搜索条件匹配的文档，请尝试其他关键词。</p>
-                    `;
-                    return;
+ 
+                // 填充作者过滤器
+                const authorFilter = document.getElementById('author-filter');
+                if (authorFilter) {
+                    const authors = [...new Set(configManager.getAllFiles().map(doc => doc.author))];
+                    authors.sort().forEach(author => {
+                        const option = document.createElement('option');
+                        option.value = author;
+                        option.textContent = author;
+                        authorFilter.appendChild(option);
+                    });
                 }
-                
-                // 显示文档网格
-                docGrid.style.display = 'grid';
-                noDocs.style.display = 'none';
-                
-                // 按排序字段排序文档
-                const sortedResults = [...results].sort((a, b) => {
-                    return a.order - b.order;
-                });
-                
-                // 生成文档卡片
-                sortedResults.forEach(doc => {
-                    const docCard = document.createElement('div');
-                    docCard.className = 'doc-card';
-                    
-                    const difficultyClass = doc.difficulty === 'all' ? 'beginner' : doc.difficulty;
-                    const difficultyText = getDifficultyText(doc.difficulty);
-                    
-                    // 生成标签HTML
-                    let tagsHtml = '';
-                    if (doc.tags && doc.tags.length > 0) {
-                        tagsHtml = doc.tags.map(tag => `<span class="doc-tag">${tag}</span>`).join('');
-                    }
-                    
-                    docCard.innerHTML = `
-                        <div class="doc-card-header">
-                            <h3 class="doc-title">${doc.title}</h3>
-                            <div class="doc-meta">
-                                <div class="doc-meta-item">
-                                    <span class="difficulty-badge ${difficultyClass}">${difficultyText}</span>
-                                </div>
-                                <div class="doc-meta-item">
-                                    <span>👤 ${doc.author}</span>
-                                </div>
-                                <div class="doc-meta-item">
-                                    <span>📅 ${doc.last_updated}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="doc-card-body">
-                            <p class="doc-description">${doc.description || '暂无描述'}</p>
-                            ${tagsHtml ? `<div class="doc-tags">${tagsHtml}</div>` : ''}
-                        </div>
-                        <div class="doc-card-footer">
-                            <div class="doc-author">作者: ${doc.author}</div>
-                            <a href="viewer.html?file=${doc.path}" class="doc-link">查看文档</a>
-                        </div>
-                    `;
-                    
-                    docGrid.appendChild(docCard);
-                });
             }
-            
-            // 执行搜索
-            function performSearch(query) {
-                const results = FOLDER_DOCS.filter(doc =>
-                    doc.title.toLowerCase().includes(query.toLowerCase()) ||
-                    doc.author.toLowerCase().includes(query.toLowerCase()) ||
-                    (doc.description && doc.description.toLowerCase().includes(query.toLowerCase())) ||
-                    (doc.tags && doc.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())))
-                );
-                
-                if (results.length === 0) {
-                    alert('没有找到匹配的文档，请尝试其他关键词');
-                } else if (results.length === 1) {
-                    // 如果只有一个结果，直接跳转
-                    window.location.href = `viewer.html?file=${results[0].path}`;
-                } else {
-                    // 如果有多个结果，更新文档网格
-                    updateDocumentGrid(results);
-                    searchInput.value = query;
-                }
+ 
+            // 获取难度文本
+            getDifficultyText(difficulty) {
+                const difficultyMap = {
+                    'beginner': '初级',
+                    'intermediate': '中级',
+                    'advanced': '高级',
+                    'all': '全部级别'
+                };
+                return difficultyMap[difficulty] || difficulty;
             }
         }
+ 
+        // 初始化模块化文件夹页面
+        document.addEventListener('DOMContentLoaded', function () {
+            window.modularFolderPage = new ModularFolderPage();
+        });
     </script>
 </body>
 

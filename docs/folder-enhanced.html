@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- 文件夹内容显示页面 -->
+<!-- 增强版文件夹内容显示页面 -->
 <html lang="zh-CN">
 
 <head>
@@ -17,7 +17,16 @@
     <meta property="og:title" content="文件夹内容 - 泰拉瑞亚Mod制作教程">
     <meta property="og:description" content="泰拉瑞亚Mod制作教程文档文件夹内容，提供特定文件夹下的所有文档列表">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://dpapyru.github.io/docs/folder.html">
+    <meta property="og:url" content="https://dpapyru.github.io/docs/folder-enhanced.html">
+    
+    <!-- 主题切换脚本 - 早期加载以避免闪烁 -->
+    <script>
+        // 主题切换早期加载脚本 - 防止页面加载时主题闪烁
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     
     <!-- 样式和图标 -->
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -218,6 +227,34 @@
         
         .search-button:hover {
             background-color: #0056b3;
+        }
+        
+        .search-history {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .search-history-title {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .search-history-item {
+            background-color: #e9ecef;
+            color: #495057;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .search-history-item:hover {
+            background-color: #dee2e6;
         }
         
         .doc-grid {
@@ -426,6 +463,57 @@
             color: #666;
         }
         
+        .advanced-search-toggle {
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .advanced-search-toggle button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
+        
+        .advanced-search-options {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .advanced-search-options.active {
+            display: block;
+        }
+        
+        .advanced-search-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .advanced-search-group {
+            flex: 1;
+        }
+        
+        .advanced-search-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .advanced-search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
             .folder-hero h1 {
@@ -442,6 +530,19 @@
             
             .folder-title {
                 font-size: 1.5rem;
+            }
+            
+            .filter-container {
+                flex-direction: column;
+            }
+            
+            .view-toggle {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+            
+            .advanced-search-row {
+                flex-direction: column;
             }
         }
     </style>
@@ -464,7 +565,7 @@
                     <ul class="nav-list">
                         <li class="nav-item"><a href="../index.html" class="nav-link">首页</a></li>
                         <li class="nav-item"><a href="index.html" class="nav-link">文档</a></li>
-                        <li class="nav-item"><a href="viewer.html" class="nav-link">文档查看器</a></li>
+                        <li class="nav-item"><a href="viewer.html" class="nav-link active">文档查看器</a></li>
                         <li class="nav-item"><a href="https://github.com/DPapyru/DPapyru.github.io" class="nav-link"
                                 target="_blank">GitHub</a></li>
                     </ul>
@@ -549,6 +650,48 @@
                         <button class="search-button" id="search-btn">🔍</button>
                         <div class="search-results" id="search-results"></div>
                     </div>
+                    
+                    <!-- 搜索历史 -->
+                    <div class="search-history" id="search-history">
+                        <div class="search-history-title">最近搜索:</div>
+                        <!-- 搜索历史项将通过JavaScript动态生成 -->
+                    </div>
+                    
+                    <!-- 高级搜索选项 -->
+                    <div class="advanced-search-toggle">
+                        <button id="advanced-search-toggle-btn">高级搜索选项</button>
+                    </div>
+                    <div class="advanced-search-options" id="advanced-search-options">
+                        <div class="advanced-search-row">
+                            <div class="advanced-search-group">
+                                <label for="title-search">标题包含:</label>
+                                <input type="text" id="title-search" class="advanced-search-input" placeholder="文档标题">
+                            </div>
+                            <div class="advanced-search-group">
+                                <label for="content-search">内容包含:</label>
+                                <input type="text" id="content-search" class="advanced-search-input" placeholder="文档内容">
+                            </div>
+                        </div>
+                        <div class="advanced-search-row">
+                            <div class="advanced-search-group">
+                                <label for="tag-search">标签包含:</label>
+                                <input type="text" id="tag-search" class="advanced-search-input" placeholder="文档标签">
+                            </div>
+                            <div class="advanced-search-group">
+                                <label for="date-from">更新时间从:</label>
+                                <input type="date" id="date-from" class="advanced-search-input">
+                            </div>
+                        </div>
+                        <div class="advanced-search-row">
+                            <div class="advanced-search-group">
+                                <label for="date-to">更新时间到:</label>
+                                <input type="date" id="date-to" class="advanced-search-input">
+                            </div>
+                            <div class="advanced-search-group">
+                                <button id="advanced-search-btn" class="btn btn-primary">执行高级搜索</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 文档列表 -->
@@ -604,6 +747,7 @@
     </footer>
 
     <!-- 加载JavaScript文件 -->
+    <script src="../assets/js/theme-toggle.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/search.js"></script>
     <script src="../assets/js/navigation.js"></script>
@@ -614,13 +758,75 @@
         let ALL_DOCS = [];
         let FOLDER_DOCS = [];
         let CURRENT_FOLDER = '';
+        let SEARCH_HISTORY = [];
+        let IS_GRID_VIEW = true;
+        
+        // 主分类配置
+        const MAIN_CATEGORIES = {
+            '0-开始': {
+                title: '开始',
+                description: '适合初学者的基础教程',
+                order: 1
+            },
+            '1-基础': {
+                title: '基础',
+                description: '有一定基础后的进阶教程',
+                order: 2
+            },
+            '2-中阶': {
+                title: '中阶',
+                description: '面向有经验开发者的高级教程',
+                order: 3
+            },
+            '3-高阶': {
+                title: '高阶',
+                description: '高级开发技巧和优化',
+                order: 4
+            },
+            '4-专家': {
+                title: '专家',
+                description: '专家级开发技巧',
+                order: 5
+            },
+            // 兼容外部项目的旧分类
+            '入门': {
+                title: '入门',
+                description: '适合初学者的基础教程',
+                order: 1
+            },
+            '进阶': {
+                title: '进阶',
+                description: '有一定基础后的进阶教程',
+                order: 2
+            },
+            '高级': {
+                title: '高级',
+                description: '面向有经验开发者的高级教程',
+                order: 3
+            },
+            '个人分享': {
+                title: '个人分享',
+                description: '社区成员的个人经验和技巧分享',
+                order: 4
+            }
+        };
         
         // 页面加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('=== docs/folder.html: 页面加载完成 ===');
+            console.log('=== docs/folder-enhanced.html: 页面加载完成 ===');
+            
+            // 初始化主题切换功能
+            const themeToggle = new ThemeToggle({
+                targetSelector: '.main-nav .nav-list',
+                position: 'last' // 作为导航菜单的最后一项
+            });
+            themeToggle.init();
             
             // 初始化移动端菜单
             initMobileMenu();
+            
+            // 加载搜索历史
+            loadSearchHistory();
             
             // 获取URL参数中的文件夹路径
             const folderPath = getFolderPathFromURL();
@@ -637,11 +843,23 @@
                 // 生成文件夹标题和描述
                 generateFolderHeader(folderPath);
                 
+                // 填充过滤器选项
+                populateFilterOptions();
+                
                 // 生成文档列表
                 generateDocumentGrid();
                 
                 // 初始化搜索功能
                 initSearchFunctionality();
+                
+                // 初始化过滤器功能
+                initFilterFunctionality();
+                
+                // 初始化视图切换功能
+                initViewToggleFunctionality();
+                
+                // 初始化高级搜索功能
+                initAdvancedSearchFunctionality();
             });
         });
 
@@ -680,6 +898,16 @@
                 authors: {},
                 all_files: []
             };
+            
+            // 初始化分类结构
+            Object.keys(MAIN_CATEGORIES).forEach(categoryKey => {
+                config.categories[categoryKey] = {
+                    title: MAIN_CATEGORIES[categoryKey].title,
+                    description: MAIN_CATEGORIES[categoryKey].description,
+                    topics: {}
+                };
+            });
+            
             return config;
         }
 
@@ -719,7 +947,7 @@
         function filterDocumentsByFolder(folderPath) {
             if (!folderPath) {
                 console.warn('未提供文件夹路径');
-                FOLDER_DOCS = [];
+                FOLDER_DOCS = [...ALL_DOCS]; // 如果没有指定文件夹，显示所有文档
                 return;
             }
             
@@ -774,8 +1002,8 @@
             
             if (!folderPath) {
                 folderHeader.innerHTML = `
-                    <h2 class="folder-title">未指定文件夹</h2>
-                    <p class="folder-description">请在URL参数中指定要查看的文件夹路径，例如: folder.html?path=Modder入门</p>
+                    <h2 class="folder-title">所有文档</h2>
+                    <p class="folder-description">浏览所有可用的文档，快速找到您需要的学习资源</p>
                 `;
                 return;
             }
@@ -795,8 +1023,34 @@
             `;
         }
 
+        // 填充过滤器选项
+        function populateFilterOptions() {
+            // 填充分类过滤器
+            const categoryFilter = document.getElementById('category-filter');
+            if (categoryFilter && DOC_CONFIG.categories) {
+                Object.keys(DOC_CONFIG.categories).forEach(categoryKey => {
+                    const option = document.createElement('option');
+                    option.value = categoryKey;
+                    option.textContent = DOC_CONFIG.categories[categoryKey].title;
+                    categoryFilter.appendChild(option);
+                });
+            }
+            
+            // 填充作者过滤器
+            const authorFilter = document.getElementById('author-filter');
+            if (authorFilter) {
+                const authors = [...new Set(ALL_DOCS.map(doc => doc.author))];
+                authors.sort().forEach(author => {
+                    const option = document.createElement('option');
+                    option.value = author;
+                    option.textContent = author;
+                    authorFilter.appendChild(option);
+                });
+            }
+        }
+
         // 生成文档列表
-        function generateDocumentGrid() {
+        function generateDocumentGrid(docs = FOLDER_DOCS) {
             const docGrid = document.getElementById('doc-grid');
             const noDocs = document.getElementById('no-docs');
             
@@ -805,7 +1059,7 @@
             // 清空现有内容
             docGrid.innerHTML = '';
             
-            if (FOLDER_DOCS.length === 0) {
+            if (docs.length === 0) {
                 // 显示无文档提示
                 docGrid.style.display = 'none';
                 noDocs.style.display = 'block';
@@ -817,8 +1071,22 @@
             noDocs.style.display = 'none';
             
             // 按排序字段排序文档
-            const sortedDocs = [...FOLDER_DOCS].sort((a, b) => {
-                return a.order - b.order;
+            const sortFilter = document.getElementById('sort-filter');
+            let sortField = 'order';
+            if (sortFilter) {
+                sortField = sortFilter.value;
+            }
+            
+            const sortedDocs = [...docs].sort((a, b) => {
+                if (sortField === 'title') {
+                    return a.title.localeCompare(b.title);
+                } else if (sortField === 'author') {
+                    return a.author.localeCompare(b.author);
+                } else if (sortField === 'last_updated') {
+                    return b.last_updated.localeCompare(a.last_updated);
+                } else {
+                    return a.order - b.order;
+                }
             });
             
             // 生成文档卡片
@@ -889,7 +1157,7 @@
                 
                 if (query.length === 0) {
                     // 显示所有文档
-                    generateDocumentGrid();
+                    applyFilters();
                     searchResults.style.display = 'none';
                     return;
                 }
@@ -904,7 +1172,7 @@
                 
                 // 显示搜索结果
                 displaySearchResults(results);
-                updateDocumentGrid(results);
+                applyFilters(results);
             });
             
             // 搜索按钮点击事件
@@ -964,82 +1232,11 @@
                 searchResults.style.display = 'block';
             }
             
-            // 更新文档网格
-            function updateDocumentGrid(results) {
-                const docGrid = document.getElementById('doc-grid');
-                const noDocs = document.getElementById('no-docs');
-                
-                if (!docGrid || !noDocs) return;
-                
-                // 清空现有内容
-                docGrid.innerHTML = '';
-                
-                if (results.length === 0) {
-                    // 显示无文档提示
-                    docGrid.style.display = 'none';
-                    noDocs.style.display = 'block';
-                    noDocs.innerHTML = `
-                        <div class="no-docs-icon">🔍</div>
-                        <h3>没有找到匹配的文档</h3>
-                        <p>没有找到与搜索条件匹配的文档，请尝试其他关键词。</p>
-                    `;
-                    return;
-                }
-                
-                // 显示文档网格
-                docGrid.style.display = 'grid';
-                noDocs.style.display = 'none';
-                
-                // 按排序字段排序文档
-                const sortedResults = [...results].sort((a, b) => {
-                    return a.order - b.order;
-                });
-                
-                // 生成文档卡片
-                sortedResults.forEach(doc => {
-                    const docCard = document.createElement('div');
-                    docCard.className = 'doc-card';
-                    
-                    const difficultyClass = doc.difficulty === 'all' ? 'beginner' : doc.difficulty;
-                    const difficultyText = getDifficultyText(doc.difficulty);
-                    
-                    // 生成标签HTML
-                    let tagsHtml = '';
-                    if (doc.tags && doc.tags.length > 0) {
-                        tagsHtml = doc.tags.map(tag => `<span class="doc-tag">${tag}</span>`).join('');
-                    }
-                    
-                    docCard.innerHTML = `
-                        <div class="doc-card-header">
-                            <h3 class="doc-title">${doc.title}</h3>
-                            <div class="doc-meta">
-                                <div class="doc-meta-item">
-                                    <span class="difficulty-badge ${difficultyClass}">${difficultyText}</span>
-                                </div>
-                                <div class="doc-meta-item">
-                                    <span>👤 ${doc.author}</span>
-                                </div>
-                                <div class="doc-meta-item">
-                                    <span>📅 ${doc.last_updated}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="doc-card-body">
-                            <p class="doc-description">${doc.description || '暂无描述'}</p>
-                            ${tagsHtml ? `<div class="doc-tags">${tagsHtml}</div>` : ''}
-                        </div>
-                        <div class="doc-card-footer">
-                            <div class="doc-author">作者: ${doc.author}</div>
-                            <a href="viewer.html?file=${doc.path}" class="doc-link">查看文档</a>
-                        </div>
-                    `;
-                    
-                    docGrid.appendChild(docCard);
-                });
-            }
-            
             // 执行搜索
             function performSearch(query) {
+                // 添加到搜索历史
+                addToSearchHistory(query);
+                
                 const results = FOLDER_DOCS.filter(doc =>
                     doc.title.toLowerCase().includes(query.toLowerCase()) ||
                     doc.author.toLowerCase().includes(query.toLowerCase()) ||
@@ -1054,9 +1251,226 @@
                     window.location.href = `viewer.html?file=${results[0].path}`;
                 } else {
                     // 如果有多个结果，更新文档网格
-                    updateDocumentGrid(results);
+                    applyFilters(results);
                     searchInput.value = query;
                 }
+            }
+        }
+
+        // 初始化过滤器功能
+        function initFilterFunctionality() {
+            const difficultyFilter = document.getElementById('difficulty-filter');
+            const categoryFilter = document.getElementById('category-filter');
+            const authorFilter = document.getElementById('author-filter');
+            const sortFilter = document.getElementById('sort-filter');
+            
+            // 为所有过滤器添加变化事件监听器
+            [difficultyFilter, categoryFilter, authorFilter, sortFilter].forEach(filter => {
+                if (filter) {
+                    filter.addEventListener('change', function() {
+                        applyFilters();
+                    });
+                }
+            });
+        }
+
+        // 应用过滤器
+        function applyFilters(docs = FOLDER_DOCS) {
+            const difficultyFilter = document.getElementById('difficulty-filter');
+            const categoryFilter = document.getElementById('category-filter');
+            const authorFilter = document.getElementById('author-filter');
+            
+            let filteredDocs = [...docs];
+            
+            // 应用难度过滤器
+            if (difficultyFilter && difficultyFilter.value !== 'all') {
+                filteredDocs = filteredDocs.filter(doc => doc.difficulty === difficultyFilter.value);
+            }
+            
+            // 应用分类过滤器
+            if (categoryFilter && categoryFilter.value !== 'all') {
+                filteredDocs = filteredDocs.filter(doc => doc.category === categoryFilter.value);
+            }
+            
+            // 应用作者过滤器
+            if (authorFilter && authorFilter.value !== 'all') {
+                filteredDocs = filteredDocs.filter(doc => doc.author === authorFilter.value);
+            }
+            
+            // 更新文档网格
+            generateDocumentGrid(filteredDocs);
+        }
+
+        // 初始化视图切换功能
+        function initViewToggleFunctionality() {
+            const gridViewBtn = document.getElementById('grid-view-btn');
+            const listViewBtn = document.getElementById('list-view-btn');
+            const docGrid = document.getElementById('doc-grid');
+            
+            if (!gridViewBtn || !listViewBtn || !docGrid) return;
+            
+            // 网格视图按钮点击事件
+            gridViewBtn.addEventListener('click', function() {
+                IS_GRID_VIEW = true;
+                docGrid.classList.remove('list-view');
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+                
+                // 保存视图偏好
+                localStorage.setItem('folder-view-preference', 'grid');
+            });
+            
+            // 列表视图按钮点击事件
+            listViewBtn.addEventListener('click', function() {
+                IS_GRID_VIEW = false;
+                docGrid.classList.add('list-view');
+                listViewBtn.classList.add('active');
+                gridViewBtn.classList.remove('active');
+                
+                // 保存视图偏好
+                localStorage.setItem('folder-view-preference', 'list');
+            });
+            
+            // 恢复视图偏好
+            const viewPreference = localStorage.getItem('folder-view-preference');
+            if (viewPreference === 'list') {
+                listViewBtn.click();
+            }
+        }
+
+        // 初始化高级搜索功能
+        function initAdvancedSearchFunctionality() {
+            const advancedSearchToggleBtn = document.getElementById('advanced-search-toggle-btn');
+            const advancedSearchOptions = document.getElementById('advanced-search-options');
+            const advancedSearchBtn = document.getElementById('advanced-search-btn');
+            
+            if (!advancedSearchToggleBtn || !advancedSearchOptions || !advancedSearchBtn) return;
+            
+            // 切换高级搜索选项显示
+            advancedSearchToggleBtn.addEventListener('click', function() {
+                advancedSearchOptions.classList.toggle('active');
+                this.textContent = advancedSearchOptions.classList.contains('active') 
+                    ? '隐藏高级搜索选项' 
+                    : '高级搜索选项';
+            });
+            
+            // 执行高级搜索
+            advancedSearchBtn.addEventListener('click', function() {
+                performAdvancedSearch();
+            });
+        }
+
+        // 执行高级搜索
+        function performAdvancedSearch() {
+            const titleSearch = document.getElementById('title-search').value.trim().toLowerCase();
+            const contentSearch = document.getElementById('content-search').value.trim().toLowerCase();
+            const tagSearch = document.getElementById('tag-search').value.trim().toLowerCase();
+            const dateFrom = document.getElementById('date-from').value;
+            const dateTo = document.getElementById('date-to').value;
+            
+            let results = [...FOLDER_DOCS];
+            
+            // 应用标题过滤器
+            if (titleSearch) {
+                results = results.filter(doc => doc.title.toLowerCase().includes(titleSearch));
+            }
+            
+            // 应用内容过滤器（这里简化处理，实际应用中可能需要全文搜索）
+            if (contentSearch) {
+                results = results.filter(doc => 
+                    (doc.description && doc.description.toLowerCase().includes(contentSearch))
+                );
+            }
+            
+            // 应用标签过滤器
+            if (tagSearch) {
+                results = results.filter(doc => 
+                    doc.tags && doc.tags.some(tag => tag.toLowerCase().includes(tagSearch))
+                );
+            }
+            
+            // 应用日期过滤器
+            if (dateFrom) {
+                results = results.filter(doc => doc.last_updated >= dateFrom);
+            }
+            
+            if (dateTo) {
+                results = results.filter(doc => doc.last_updated <= dateTo);
+            }
+            
+            // 更新文档网格
+            generateDocumentGrid(results);
+            
+            // 如果没有结果，显示提示
+            if (results.length === 0) {
+                const noDocs = document.getElementById('no-docs');
+                if (noDocs) {
+                    noDocs.style.display = 'block';
+                    noDocs.querySelector('h3').textContent = '没有找到匹配的文档';
+                    noDocs.querySelector('p').textContent = '没有找到与高级搜索条件匹配的文档，请尝试其他条件。';
+                }
+            }
+        }
+
+        // 加载搜索历史
+        function loadSearchHistory() {
+            try {
+                const history = localStorage.getItem('folder-search-history');
+                if (history) {
+                    SEARCH_HISTORY = JSON.parse(history);
+                    displaySearchHistory();
+                }
+            } catch (error) {
+                console.warn('无法加载搜索历史:', error);
+                SEARCH_HISTORY = [];
+            }
+        }
+
+        // 显示搜索历史
+        function displaySearchHistory() {
+            const searchHistoryContainer = document.getElementById('search-history');
+            if (!searchHistoryContainer || SEARCH_HISTORY.length === 0) return;
+            
+            const historyTitle = searchHistoryContainer.querySelector('.search-history-title');
+            searchHistoryContainer.innerHTML = '';
+            searchHistoryContainer.appendChild(historyTitle);
+            
+            // 只显示最近5个搜索历史
+            const recentHistory = SEARCH_HISTORY.slice(-5).reverse();
+            
+            recentHistory.forEach(query => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'search-history-item';
+                historyItem.textContent = query;
+                
+                historyItem.addEventListener('click', function() {
+                    document.getElementById('doc-search').value = query;
+                    performSearch(query);
+                });
+                
+                searchHistoryContainer.appendChild(historyItem);
+            });
+        }
+
+        // 添加到搜索历史
+        function addToSearchHistory(query) {
+            // 移除已存在的相同查询
+            SEARCH_HISTORY = SEARCH_HISTORY.filter(item => item !== query);
+            
+            // 添加新查询到开头
+            SEARCH_HISTORY.unshift(query);
+            
+            // 限制历史记录数量
+            if (SEARCH_HISTORY.length > 10) {
+                SEARCH_HISTORY = SEARCH_HISTORY.slice(0, 10);
+            }
+            
+            // 保存到localStorage
+            try {
+                localStorage.setItem('folder-search-history', JSON.stringify(SEARCH_HISTORY));
+                displaySearchHistory();
+            } catch (error) {
+                console.warn('无法保存搜索历史:', error);
             }
         }
     </script>

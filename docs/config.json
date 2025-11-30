@@ -15,7 +15,15 @@
               "author": "小天使",
               "order": 1,
               "description": "给新人的入门建议",
-              "last_updated": "2025-11-27"
+              "last_updated": "2025-11-27",
+              "difficulty": "beginner",
+              "tags": [
+                "[\"入门\"",
+                "\"基础\"",
+                "\"建议\"]"
+              ],
+              "category": "入门",
+              "topic": "mod-basics"
             }
           ]
         }
@@ -74,7 +82,14 @@
               "author": "小天使",
               "order": 1,
               "description": "用于测试文档查看器功能的示例文档",
-              "last_updated": "2025-11-27"
+              "last_updated": "2025-11-27",
+              "difficulty": "beginner",
+              "tags": [
+                "[\"贡献者\"",
+                "\"文章编写\"]"
+              ],
+              "category": "怎么贡献",
+              "topic": "mod-basics"
             }
           ]
         },
@@ -89,7 +104,15 @@
               "author": "小天使",
               "order": 1,
               "description": "详细介绍Topic系统的使用方法和最佳实践",
-              "last_updated": "2025-11-27"
+              "last_updated": "2025-11-27",
+              "difficulty": "advanced",
+              "tags": [
+                "[\"Topic系统\"",
+                "\"配置\"",
+                "\"最佳实践\"]"
+              ],
+              "category": "怎么贡献",
+              "topic": "advanced"
             }
           ]
         }
@@ -210,27 +233,50 @@
       "path": "Modder入门/DPapyru-给新人的前言.md",
       "title": "给新人的入门建议",
       "author": "小天使",
+      "order": 1,
+      "description": "给新人的入门建议",
+      "last_updated": "2025-11-27",
+      "difficulty": "beginner",
+      "tags": [
+        "[\"入门\"",
+        "\"基础\"",
+        "\"建议\"]"
+      ],
       "category": "入门",
-      "topic": "mod-basics",
-      "order": 1
+      "topic": "mod-basics"
     },
     {
       "filename": "DPapyru-贡献者如何编写文章基础.md",
       "path": "怎么贡献/DPapyru-贡献者如何编写文章基础.md",
       "title": "贡献者怎么编写文章？",
       "author": "小天使",
+      "order": 1,
+      "description": "用于测试文档查看器功能的示例文档",
+      "last_updated": "2025-11-27",
+      "difficulty": "beginner",
+      "tags": [
+        "[\"贡献者\"",
+        "\"文章编写\"]"
+      ],
       "category": "怎么贡献",
-      "topic": "mod-basics",
-      "order": 1
+      "topic": "mod-basics"
     },
     {
       "filename": "TopicSystem使用指南.md",
       "path": "怎么贡献/TopicSystem使用指南.md",
       "title": "Topic系统使用指南",
       "author": "小天使",
+      "order": 1,
+      "description": "详细介绍Topic系统的使用方法和最佳实践",
+      "last_updated": "2025-11-27",
+      "difficulty": "advanced",
+      "tags": [
+        "[\"Topic系统\"",
+        "\"配置\"",
+        "\"最佳实践\"]"
+      ],
       "category": "怎么贡献",
-      "topic": "advanced",
-      "order": 1
+      "topic": "advanced"
     }
   ]
 }

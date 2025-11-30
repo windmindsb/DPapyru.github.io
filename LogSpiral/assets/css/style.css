@@ -1,3 +1,6 @@
+/* 导入变量文件 */
+@import url('variables.css');
+
 /* 重置样式 */
 * {
     margin: 0;
@@ -9,8 +12,8 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #fff;
-    background-color: #121212;
+    color: var(--text-color);
+    background-color: var(--bg-color);
 }
 
 .container {
@@ -21,13 +24,13 @@ body {
 
 /* 链接样式 */
 a {
-    color: #007bff;
+    color: var(--link-color);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 a:hover {
-    color: #0056b3;
+    color: var(--link-hover);
 }
 
 /* 按钮样式 */
@@ -62,14 +65,14 @@ a:hover {
 }
 
 .btn-primary {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 .btn-secondary {
@@ -85,15 +88,15 @@ a:hover {
 
 .btn-outline {
     background-color: transparent;
-    border: 1px solid #007bff;
-    color: #007bff;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
 }
 
 .btn-outline:hover {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 .btn-small {
@@ -104,13 +107,13 @@ a:hover {
 
 .btn:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
 }
 
 /* 头部样式 */
 .site-header {
-    background-color: #1e1e1e;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    background-color: var(--header-bg);
+    box-shadow: 0 2px 4px var(--header-shadow);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -132,7 +135,7 @@ a:hover {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #fff;
+    color: var(--text-color);
 }
 
 .logo-image {
@@ -158,7 +161,7 @@ a:hover {
 }
 
 .nav-link {
-    color: #fff;
+    color: var(--text-color);
     font-weight: 500;
     padding: 5px 0;
     border-bottom: 2px solid transparent;
@@ -167,8 +170,8 @@ a:hover {
 
 .nav-link:hover,
 .nav-link.active {
-    color: #007bff;
-    border-bottom-color: #007bff;
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
 }
 
 .mobile-menu-toggle {
@@ -197,8 +200,8 @@ a:hover {
 /* 侧边栏样式 */
 .sidebar {
     width: 280px;
-    background-color: #1e1e1e;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    background-color: var(--sidebar-bg);
+    box-shadow: 2px 0 8px var(--shadow);
     padding: 20px 0;
     position: sticky;
     top: 70px;
@@ -260,8 +263,8 @@ a:hover {
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 15px;
-    color: #fff;
-    border-bottom: 2px solid #007bff;
+    color: var(--sidebar-text);
+    border-bottom: 2px solid var(--primary-color);
     padding-bottom: 8px;
     display: flex;
     align-items: center;
@@ -316,7 +319,7 @@ a:hover {
     left: 0;
     width: 40px;
     height: 2px;
-    background-color: #007bff;
+    background-color: var(--primary-color);
 }
 
 .sidebar-list {
@@ -346,7 +349,7 @@ a:hover {
 }
 
 .sidebar-list a {
-    color: #ccc;
+    color: var(--sidebar-link);
     font-size: 0.9rem;
     padding: 10px 12px;
     display: block;
@@ -356,16 +359,16 @@ a:hover {
 }
 
 .sidebar-list a:hover {
-    color: #007bff;
-    background-color: #2a2a2a;
+    color: var(--primary-color);
+    background-color: var(--sidebar-hover);
     transform: translateX(3px);
 }
 
 .sidebar-list a.active {
-    color: #007bff;
-    background-color: #1a3a52;
+    color: var(--primary-color);
+    background-color: var(--sidebar-active);
     font-weight: 500;
-    border-left: 3px solid #007bff;
+    border-left: 3px solid var(--primary-color);
 }
 
 /* 分类导航样式 */
@@ -392,9 +395,9 @@ a:hover {
     font-weight: 600;
     padding: 12px 15px;
     margin: 0;
-    background-color: #2a2a2a;
-    color: #fff;
-    border-bottom: 1px solid #333;
+    background-color: var(--bg-secondary);
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -408,7 +411,7 @@ a:hover {
 }
 
 .category-header:hover {
-    background-color: #333;
+    background-color: var(--border-color);
 }
 
 .category-header::after {
@@ -418,12 +421,13 @@ a:hover {
     left: 15px;
     right: 15px;
     height: 2px;
-    background: linear-gradient(90deg, #007bff, transparent);
+    background: linear-gradient(90deg, var(--primary-color), transparent);
 }
 
 .category-title-text {
     flex: 1;
     text-align: left;
+    color: #f8fafc;
 }
 
 .category-toggle {
@@ -576,31 +580,31 @@ a:hover {
     content: "▪";
     position: absolute;
     left: 12px;
-    color: #6c757d;
+    color: var(--text-muted);
     font-size: 0.8rem;
     transition: color 0.2s ease;
 }
 
 .file-item a:hover {
-    color: #007bff;
-    background-color: #2a2a2a;
+    color: var(--primary-color);
+    background-color: var(--sidebar-hover);
     padding-left: 30px;
 }
 
 .file-item a:hover::before {
-    color: #007bff;
+    color: var(--primary-color);
 }
 
 .file-item a.active {
-    color: #007bff;
-    background-color: #1a3a52;
+    color: var(--primary-color);
+    background-color: var(--sidebar-active);
     font-weight: 500;
-    border-left: 3px solid #007bff;
+    border-left: 3px solid var(--primary-color);
     padding-left: 30px;
 }
 
 .file-item a.active::before {
-    color: #007bff;
+    color: var(--primary-color);
     content: "▶";
 }
 
@@ -614,13 +618,13 @@ a:hover {
 
 /* 所有文档部分特殊样式 */
 .category-item.all-docs {
-    border-color: #007bff;
-    background-color: #1a3a52;
+    border-color: var(--primary-color);
+    background-color: var(--sidebar-active);
 }
 
 .category-item.all-docs .category-header {
-    background-color: #1a3a52;
-    color: #007bff;
+    background-color: var(--sidebar-active);
+    color: var(--primary-color);
 }
 
 /* 分割线样式 */
@@ -639,7 +643,7 @@ a:hover {
     transform: translate(-50%, -50%);
     width: 40px;
     height: 3px;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     border-radius: 2px;
 }
 
@@ -680,21 +684,21 @@ a:hover {
 .main-content {
     flex: 1;
     padding: 30px 25px;
-    background-color: #1e1e1e;
+    background-color: var(--bg-secondary);
 }
 
 .content-wrapper {
     max-width: 850px;
     margin: 0 auto;
-    background-color: #1e1e1e;
+    background-color: var(--bg-content);
     padding: 35px 40px;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-md);
     transition: box-shadow 0.3s ease;
 }
 
 .content-wrapper:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-lg);
 }
 
 /* 首页样式 */
@@ -703,7 +707,7 @@ a:hover {
 }
 
 .hero {
-    background: linear-gradient(0deg, #0056b3, #007bff, #0056b3);
+    background: linear-gradient(0deg, var(--primary-hover), var(--primary-color), var(--primary-hover));
     color: white;
     padding: 80px 0;
 }
@@ -731,9 +735,9 @@ a:hover {
     position: relative;
     display: flex;
     align-items: center;
-    background-color: rgba(30, 30, 30, 0.95);
+    background-color: rgba(18, 18, 18, 0.95);
     border-radius: 60px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-xl);
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -751,18 +755,18 @@ a:hover {
     font-size: 1.1rem;
     outline: none;
     background-color: transparent;
-    color: #fff;
+    color: var(--text-color);
     font-weight: 500;
 }
 
 .hero-search .search-input::placeholder {
-    color: #aaa;
+    color: var(--text-muted);
 }
 
 .hero-search .search-button {
     position: absolute;
     right: 10px;
-    background: #007bff;
+    background: var(--primary-color);
     border: none;
     color: white;
     cursor: pointer;
@@ -774,11 +778,11 @@ a:hover {
     transition: all 0.3s ease;
     width: 48px;
     height: 48px;
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
 }
 
 .hero-search .search-button:hover {
-    background: #0056b3;
+    background: var(--primary-hover);
     transform: scale(1.05);
 }
 
@@ -809,11 +813,11 @@ a:hover {
     top: 100%;
     left: 0;
     right: 0;
-    background-color: #1e1e1e;
-    border: 1px solid #333;
+    background-color: var(--bg-content);
+    border: 1px solid var(--border-color);
     border-top: none;
     border-radius: 0 0 12px 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-xl);
     max-height: 300px;
     overflow-y: auto;
     z-index: 1000;
@@ -883,17 +887,17 @@ a:hover {
 }
 
 .feature-card {
-    background-color: #1e1e1e;
+    background-color: var(--bg-content);
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow);
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-xl);
 }
 
 .feature-icon {
@@ -911,11 +915,11 @@ a:hover {
 .feature-title {
     font-size: 1.3rem;
     margin-bottom: 15px;
-    color: #fff;
+    color: var(--text-color);
 }
 
 .feature-description {
-    color: #ccc;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
@@ -971,7 +975,7 @@ a:hover {
 }
 
 .tutorial-link {
-    color: #007bff;
+    color: var(--primary-color);
     font-weight: 500;
     display: inline-flex;
     align-items: center;
@@ -979,7 +983,7 @@ a:hover {
 }
 
 .tutorial-link:hover {
-    color: #0056b3;
+    color: var(--primary-hover);
 }
 
 .tutorials-footer {
@@ -1039,7 +1043,7 @@ a:hover {
 }
 
 .category-link {
-    color: #007bff;
+    color: var(--primary-color);
     font-weight: 500;
     display: inline-flex;
     align-items: center;
@@ -1047,7 +1051,7 @@ a:hover {
 }
 
 .category-link:hover {
-    color: #0056b3;
+    color: var(--primary-hover);
 }
 
 /* 最新更新部分 */
@@ -1063,21 +1067,21 @@ a:hover {
 }
 
 .update-card {
-    background-color: #1e1e1e;
+    background-color: var(--bg-content);
     border-radius: 8px;
     padding: 25px;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid var(--primary-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .update-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-xl);
 }
 
 .update-date {
     font-size: 0.9rem;
-    color: #007bff;
+    color: var(--primary-color);
     font-weight: 600;
     margin-bottom: 10px;
 }
@@ -1085,11 +1089,11 @@ a:hover {
 .update-title {
     font-size: 1.3rem;
     margin-bottom: 15px;
-    color: #fff;
+    color: var(--text-color);
 }
 
 .update-description {
-    color: #ccc;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
@@ -1126,7 +1130,7 @@ a:hover {
 .step-number {
     width: 50px;
     height: 50px;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -1140,11 +1144,11 @@ a:hover {
 .step-content h3 {
     font-size: 1.2rem;
     margin-bottom: 15px;
-    color: #fff;
+    color: var(--text-color);
 }
 
 .step-content p {
-    color: #ccc;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
@@ -1228,11 +1232,11 @@ a:hover {
     flex-wrap: wrap;
     gap: 18px;
     font-size: 0.9rem;
-    color: #6c757d;
-    padding: 12px 0;
-    background-color: #f8f9fa;
-    border-radius: 6px;
+    color: #ccc;
     padding: 12px 15px;
+    background-color: #1a1a1a;
+    border-radius: 6px;
+    border: 1px solid #333;
 }
 
 .difficulty-badge {
@@ -1917,6 +1921,7 @@ a:hover {
 .mobile-category-title-text {
     flex: 1;
     text-align: left;
+    color: #f8fafc;
 }
 
 .mobile-category-toggle {
@@ -2487,15 +2492,22 @@ a:hover {
 .update-link {
     display: inline-block;
     margin-top: 15px;
-    color: #007bff;
+    padding: 8px 16px;
+    background-color: var(--primary-color);
+    color: white;
     font-weight: 500;
     text-decoration: none;
-    transition: color 0.3s ease;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .update-link:hover {
-    color: #0056b3;
-    text-decoration: underline;
+    background-color: var(--primary-hover);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* 错误信息样式 */
@@ -3350,4 +3362,207 @@ html {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(-5px);
+}
+
+/* 确保关键元素使用变量 - 深色模式强制样式 */
+[data-theme="dark"] body,
+[data-theme="dark"] .site-header,
+[data-theme="dark"] .sidebar,
+[data-theme="dark"] .main-content,
+[data-theme="dark"] .content-wrapper,
+[data-theme="dark"] .hero-search .search-box,
+[data-theme="dark"] .hero-search .search-suggestions,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .tutorial-card,
+[data-theme="dark"] .category-card,
+[data-theme="dark"] .update-card,
+[data-theme="dark"] .guide-step {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .main-content {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .content-wrapper {
+    background-color: var(--bg-content) !important;
+}
+
+[data-theme="dark"] .sidebar {
+    background-color: var(--sidebar-bg) !important;
+}
+
+[data-theme="dark"] .site-header {
+    background-color: var(--header-bg) !important;
+}
+
+[data-theme="dark"] a {
+    color: var(--link-color) !important;
+}
+
+[data-theme="dark"] a:hover {
+    color: var(--link-hover) !important;
+}
+
+[data-theme="dark"] .btn-primary {
+    background-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+[data-theme="dark"] .nav-link {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .nav-link:hover,
+[data-theme="dark"] .nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .sidebar-title {
+    color: var(--sidebar-text) !important;
+    border-bottom-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .sidebar-title::before {
+    background-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .sidebar-list a {
+    color: var(--sidebar-link) !important;
+}
+
+[data-theme="dark"] .sidebar-list a:hover {
+    color: var(--primary-color) !important;
+    background-color: var(--sidebar-hover) !important;
+}
+
+[data-theme="dark"] .sidebar-list a.active {
+    color: var(--primary-color) !important;
+    background-color: var(--sidebar-active) !important;
+    border-left-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .category-header {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-color) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .category-header::after {
+    background: linear-gradient(90deg, var(--primary-color), transparent) !important;
+}
+
+[data-theme="dark"] .file-item a {
+    color: var(--sidebar-link) !important;
+}
+
+[data-theme="dark"] .file-item a:hover {
+    color: var(--primary-color) !important;
+    background-color: var(--sidebar-hover) !important;
+}
+
+[data-theme="dark"] .file-item a.active {
+    color: var(--primary-color) !important;
+    background-color: var(--sidebar-active) !important;
+    border-left-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .category-item.all-docs {
+    border-color: var(--primary-color) !important;
+    background-color: var(--sidebar-active) !important;
+}
+
+[data-theme="dark"] .category-item.all-docs .category-header {
+    background-color: var(--sidebar-active) !important;
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .sidebar-divider::before {
+    background-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .hero {
+    background: linear-gradient(0deg, var(--primary-hover), var(--primary-color), var(--primary-hover)) !important;
+}
+
+[data-theme="dark"] .hero-search .search-box {
+    background-color: rgba(18, 18, 18, 0.95) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .hero-search .search-input {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .hero-search .search-input::placeholder {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .hero-search .search-suggestions {
+    background-color: var(--bg-content) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .hero-search .search-button {
+    background-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .hero-search .search-button:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+[data-theme="dark"] .feature-title,
+[data-theme="dark"] .tutorial-title,
+[data-theme="dark"] .update-title {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .feature-description,
+[data-theme="dark"] .tutorial-description,
+[data-theme="dark"] .update-description {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .tutorial-link,
+[data-theme="dark"] .category-link {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .tutorial-link:hover,
+[data-theme="dark"] .category-link:hover {
+    color: var(--primary-hover) !important;
+}
+
+[data-theme="dark"] .update-date {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .step-number {
+    background-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .step-content h3 {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .step-content p {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .update-card {
+    background-color: var(--bg-content) !important;
+    border-left-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .update-card:hover {
+    box-shadow: var(--shadow-xl) !important;
+}
+
+/* 过渡效果 */
+[data-theme="dark"] * {
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
 }

@@ -37,15 +37,24 @@
     <link rel="stylesheet" href="assets/css/prism.min.css">
     <link rel="stylesheet" href="assets/css/vs2022-theme.css">
     <link rel="icon" type="image/png" href="assets/imgs/Green_tModLoader.png">
+    
+    <!-- 主题切换脚本 - 早期加载以避免闪烁 -->
+    <script>
+        // 主题切换早期加载脚本 - 防止页面加载时主题闪烁
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <style>
         /* 特殊的螺线教程样式 */
         .LogSpiral {
-            background-color: #303030;
+            background-color: #2a2a2a;
             box-shadow: 1px 1px 2.5px rgba(39, 81, 221, 0.22),
                 -1px -1px 2.5px rgba(39, 81, 221, 0.22),
                 -1px 1px 2.5px rgba(39, 81, 221, 0.22),
                 1px -1px 2.5px rgba(39, 81, 221, 0.22);
-            color: rgb(198, 221, 255);
+            color: white !important;
             text-shadow:
                 1px 1px 2.5px rgba(39, 81, 221, 0.22),
                 -1px -1px 2.5px rgba(39, 81, 221, 0.22),
@@ -185,10 +194,19 @@
     </footer>
 
     <!-- 加载JavaScript文件 -->
+    <script src="assets/js/theme-toggle.js"></script> <!-- 主题切换功能脚本 -->
     <script src="assets/js/main.js"></script> <!-- 主要功能脚本 -->
     <script src="assets/js/search.js"></script> <!-- 搜索功能脚本 -->
     <script src="assets/js/navigation.js"></script> <!-- 导航功能脚本 -->
     <script src="assets/js/latest-updates.js"></script> <!-- 最新更新功能脚本 -->
+    
+    <!-- 初始化主题切换功能 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 主题切换功能已在 theme-toggle.js 中自动初始化
+            // 这里不需要额外的初始化代码
+        });
+    </script>
 
 </body>
 
