@@ -897,6 +897,10 @@ function loadMarkdownContent(filePath) {
 
                     // 为新内容初始化平滑滚动功能
                     initSmoothScroll();
+
+                    // 初始化图片缩放功能
+                    initImageZoom();
+                    
                 } catch (error) {
                     console.error('Markdown渲染错误:', error);
                     throw error;
@@ -1326,4 +1330,374 @@ if (typeof originalLoadMarkdownContent === 'function') {
             }
         }
     };
+}
+
+/**
+ * 初始化图片放大功能
+ * 为页面中的所有图片添加点击放大效果，支持滑轮缩放和移动端手势
+ */
+function initImageZoom() {
+    // 使用更广泛的选择器，确保能捕获所有图片
+    const images = document.querySelectorAll('#markdown-content img, .markdown-content img, .tutorial-content img, main img');
+
+    console.log(`找到 ${images.length} 个图片元素用于放大功能`);
+
+    images.forEach((img, index) => {
+        // 跳过已经处理过的图片
+        if (img.hasAttribute('data-zoom-enabled')) {
+            return;
+        }
+
+        // 标记为已处理
+        img.setAttribute('data-zoom-enabled', 'true');
+
+        // 添加点击事件
+        img.addEventListener('click', function () {
+            createImageOverlay(this.src, this.alt || '');
+        });
+
+        // 添加鼠标样式提示
+        img.style.cursor = 'zoom-in';
+
+        console.log(`为图片 ${index + 1} 添加放大功能:`, img.src);
+    });
+}
+
+function initImageZoom() {
+    // 使用更广泛的选择器，确保能捕获所有图片
+    const images = document.querySelectorAll('#markdown-content img, .markdown-content img, .tutorial-content img, main img');
+
+    console.log(`找到 ${images.length} 个图片元素用于放大功能`);
+
+    images.forEach((img, index) => {
+        // 跳过已经处理过的图片
+        if (img.hasAttribute('data-zoom-enabled')) {
+            return;
+        }
+
+        // 标记为已处理
+        img.setAttribute('data-zoom-enabled', 'true');
+
+        // 添加点击事件
+        img.addEventListener('click', function () {
+            createImageOverlay(this.src, this.alt || '');
+        });
+
+        // 添加鼠标样式提示
+        img.style.cursor = 'zoom-in';
+
+        console.log(`为图片 ${index + 1} 添加放大功能:`, img.src);
+    });
+}
+
+
+/**
+ * 创建图片遮罩层和放大显示
+ * 支持鼠标滑轮缩放和移动端手势
+ * @param {string} imageSrc - 图片源地址
+ * @param {string} imageAlt - 图片描述
+ */
+function createImageOverlay(imageSrc, imageAlt) {
+    // 检查是否已存在遮罩层
+    if (document.getElementById('image-zoom-overlay')) {
+        return;
+    }
+
+    // 创建遮罩层
+    const overlay = document.createElement('div');
+    overlay.id = 'image-zoom-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        cursor: zoom-out;
+        touch-action: none;
+        user-select: none;
+    `;
+
+    // 创建图片容器
+    const imageContainer = document.createElement('div');
+    imageContainer.style.cssText = `
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        transform-origin: center center;
+        transition: transform 0.3s ease;
+    `;
+
+    // 创建放大图片
+    const zoomedImage = document.createElement('img');
+    zoomedImage.src = imageSrc;
+    zoomedImage.alt = imageAlt;
+    zoomedImage.style.cssText = `
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        border-radius: 8px;
+    `;
+
+    // 缩放状态
+    let scale = 1;
+    let minScale = 0.5;
+    let maxScale = 5;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let translateX = 0;
+    let translateY = 0;
+
+    // 更新图片变换
+    function updateTransform() {
+        imageContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    }
+
+    // 鼠标滑轮缩放
+    function handleWheel(e) {
+        e.preventDefault();
+
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        const newScale = scale * delta;
+
+        if (newScale >= minScale && newScale <= maxScale) {
+            scale = newScale;
+            updateTransform();
+        }
+    }
+
+    // 触摸手势处理
+    let lastTouchDistance = 0;
+    let lastTouchScale = 1;
+
+    function getTouchDistance(touches) {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function handleTouchStart(e) {
+        if (e.touches.length === 1) {
+            // 单指触摸，准备拖拽
+            isDragging = true;
+            startX = e.touches[0].clientX - translateX;
+            startY = e.touches[0].clientY - translateY;
+        } else if (e.touches.length === 2) {
+            // 双指触摸，准备缩放
+            lastTouchDistance = getTouchDistance(e.touches);
+            lastTouchScale = scale;
+            isDragging = false;
+        }
+    }
+
+    function handleTouchMove(e) {
+        e.preventDefault();
+
+        if (e.touches.length === 1 && isDragging) {
+            // 单指拖拽
+            translateX = e.touches[0].clientX - startX;
+            translateY = e.touches[0].clientY - startY;
+            updateTransform();
+        } else if (e.touches.length === 2) {
+            // 双指缩放
+            const currentDistance = getTouchDistance(e.touches);
+            const scaleRatio = currentDistance / lastTouchDistance;
+            const newScale = lastTouchScale * scaleRatio;
+
+            if (newScale >= minScale && newScale <= maxScale) {
+                scale = newScale;
+                updateTransform();
+            }
+        }
+    }
+
+    function handleTouchEnd(e) {
+        if (e.touches.length === 0) {
+            isDragging = false;
+        }
+    }
+
+    // 添加事件监听器
+    overlay.addEventListener('wheel', handleWheel, { passive: false });
+    overlay.addEventListener('touchstart', handleTouchStart, { passive: false });
+    overlay.addEventListener('touchmove', handleTouchMove, { passive: false });
+    overlay.addEventListener('touchend', handleTouchEnd);
+
+    // 添加缩放控制按钮
+    const controls = document.createElement('div');
+    controls.style.cssText = `
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 10;
+    `;
+
+    // 放大按钮
+    const zoomInBtn = document.createElement('button');
+    zoomInBtn.innerHTML = '+';
+    zoomInBtn.style.cssText = `
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+    `;
+    zoomInBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (scale < maxScale) {
+            scale = Math.min(scale * 1.2, maxScale);
+            updateTransform();
+        }
+    });
+
+    // 缩小按钮
+    const zoomOutBtn = document.createElement('button');
+    zoomOutBtn.innerHTML = '-';
+    zoomOutBtn.style.cssText = `
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+    `;
+    zoomOutBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (scale > minScale) {
+            scale = Math.max(scale * 0.8, minScale);
+            updateTransform();
+        }
+    });
+
+    // 重置按钮
+    const resetBtn = document.createElement('button');
+    resetBtn.innerHTML = '⟲';
+    resetBtn.style.cssText = `
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+    `;
+    resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        scale = 1;
+        translateX = 0;
+        translateY = 0;
+        updateTransform();
+    });
+
+    // 添加悬停效果
+    [zoomInBtn, zoomOutBtn, resetBtn].forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+            btn.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        });
+    });
+
+    controls.appendChild(zoomInBtn);
+    controls.appendChild(zoomOutBtn);
+    controls.appendChild(resetBtn);
+
+    // 添加图片描述
+    if (imageAlt) {
+        const caption = document.createElement('div');
+        caption.textContent = imageAlt;
+        caption.style.cssText = `
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            max-width: calc(100% - 200px);
+            word-wrap: break-word;
+        `;
+        overlay.appendChild(caption);
+    }
+
+    // 组装元素
+    imageContainer.appendChild(zoomedImage);
+    overlay.appendChild(imageContainer);
+    overlay.appendChild(controls);
+
+    // 添加关闭事件
+    overlay.addEventListener('click', function (e) {
+        // 如果点击的是控制按钮，不关闭
+        if (e.target === zoomInBtn || e.target === zoomOutBtn || e.target === resetBtn) {
+            return;
+        }
+        document.body.removeChild(overlay);
+    });
+
+    // 添加ESC键关闭功能
+    const handleKeyPress = function (e) {
+        if (e.key === 'Escape') {
+            const overlay = document.getElementById('image-zoom-overlay');
+            if (overlay) {
+                document.body.removeChild(overlay);
+                document.removeEventListener('keydown', handleKeyPress);
+            }
+        }
+    };
+    document.addEventListener('keydown', handleKeyPress);
+
+    // 添加到页面
+    document.body.appendChild(overlay);
+
+    // 图片加载完成后调整大小
+    zoomedImage.addEventListener('load', function () {
+        // 确保图片在视口内正确显示
+        if (scale === 1) {
+            const imgWidth = zoomedImage.naturalWidth;
+            const imgHeight = zoomedImage.naturalHeight;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            const scaleX = (windowWidth * 0.9) / imgWidth;
+            const scaleY = (windowHeight * 0.9) / imgHeight;
+            const autoScale = Math.min(scaleX, scaleY, 1);
+
+            if (autoScale < 1) {
+                scale = autoScale;
+                updateTransform();
+            }
+        }
+    });
 }

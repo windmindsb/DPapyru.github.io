@@ -844,6 +844,9 @@
                         markdownContent.style.display = 'block';
                         document.getElementById('table-of-contents').style.display = 'block';
 
+                        // 初始化图片缩放
+                        initImageZoom();
+
                     } else {
                         throw new Error('marked.js未加载');
                     }
