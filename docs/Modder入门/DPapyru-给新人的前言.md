@@ -9,7 +9,7 @@ difficulty: beginner
 time: 5分钟
 description: 新人要看一下前言
 prev_chapter: null
-next_chapter: null
+next_chapter: DPapyru-贡献者如何编写文章基础.md
 topic: mod-basics
 colorLD:
    Mad:
