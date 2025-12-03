@@ -2,8 +2,8 @@
 title: Topic系统使用指南
 author: 小天使
 category: 怎么贡献
-topic: advanced
-order: 1
+topic: 文章贡献
+order: 999
 difficulty: advanced
 time: 30分钟
 description: 详细介绍Topic系统的使用方法和最佳实践
