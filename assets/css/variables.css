@@ -74,6 +74,17 @@
 
   /* 引用(>)颜色 */
   --import-color: #888;
+  
+  /* 危险/错误颜色 */
+  --danger-color: #dc3545;
+  --danger-bg: rgba(220, 53, 69, 0.1);
+  
+  /* 高亮颜色 */
+  --highlight-bg: #fff3cd;
+  --highlight-text: #856404;
+  
+  /* 主色调浅色版本 */
+  --primary-light: rgba(40, 167, 69, 0.1);
 }
 
 /* 深色主题 */
@@ -148,4 +159,15 @@
 
   /* 引用(>)颜色 */
   --import-color: #666;
+  
+  /* 危险/错误颜色 */
+  --danger-color: #dc3545;
+  --danger-bg: rgba(220, 53, 69, 0.2);
+  
+  /* 高亮颜色 */
+  --highlight-bg: #3e3e00;
+  --highlight-text: #ffeb3b;
+  
+  /* 主色调浅色版本 */
+  --primary-light: rgba(40, 167, 69, 0.2);
 }

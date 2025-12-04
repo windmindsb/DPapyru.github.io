@@ -17,6 +17,15 @@
     <link rel="stylesheet" href="assets/css/prism.min.css">
     <link rel="stylesheet" href="assets/css/vs2022-theme.css">
     <link rel="icon" type="image/png" href="assets/imgs/Green_tModLoader.png">
+    
+    <!-- 主题切换脚本 - 早期加载以避免闪烁 -->
+    <script>
+        // 主题切换早期加载脚本 - 防止页面加载时主题闪烁
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 
     <!-- 搜索结果页面专用样式 -->
     <style>
@@ -454,6 +463,7 @@
                         <li class="nav-item"><a href="search-results.html" class="nav-link active">搜索</a></li>
                         <li class="nav-item"><a href="https://github.com/DPapyru/DPapyru.github.io" class="nav-link"
                                 target="_blank">GitHub</a></li>
+                        <!-- 主题切换按钮将通过 theme-toggle.js 自动添加 -->
                     </ul>
                 </nav>
                 <!-- 移动端菜单切换按钮 -->
@@ -625,12 +635,19 @@
     </footer>
 
     <!-- 加载JavaScript文件 -->
+    <script src="assets/js/theme-toggle.js"></script> <!-- 主题切换功能脚本 -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/search.js"></script>
     <script src="assets/js/navigation.js"></script>
 
     <!-- 搜索结果页面专用脚本 -->
     <script>
+        // 初始化主题切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 主题切换功能已在 theme-toggle.js 中自动初始化
+            // 这里不需要额外的初始化代码
+        });
+        
         // 搜索结果页面功能
         class SearchResultsPage {
             constructor() {

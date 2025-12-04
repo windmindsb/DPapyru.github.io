@@ -545,3 +545,331 @@
         -1px 1px 2.5px rgba(39, 81, 221, 0.22),
         1px -1px 2.5px rgba(39, 81, 221, 0.22) !important;
 }
+
+/* 文件夹页面特定样式 */
+[data-theme="dark"] .folder-hero {
+    background: linear-gradient(0deg, var(--primary-hover), var(--primary-color), var(--primary-hover)) !important;
+}
+
+[data-theme="dark"] .folder-title {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .folder-description {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .filter-container {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .filter-group label {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .filter-select {
+    background-color: var(--bg-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .filter-select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 2px var(--search-focus) !important;
+}
+
+[data-theme="dark"] .view-toggle button {
+    background-color: var(--bg-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .view-toggle button.active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .search-section {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .search-results {
+    background-color: var(--bg-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .search-result-item {
+    border-bottom-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .search-result-item:hover {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .doc-card {
+    background-color: var(--bg-color) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .doc-card:hover {
+    box-shadow: var(--shadow-lg) !important;
+}
+
+[data-theme="dark"] .doc-card-header {
+    border-bottom-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .doc-title {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .doc-meta {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .doc-description {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .doc-tag {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .doc-card-footer {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .doc-author {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .doc-link {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .doc-link:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+[data-theme="dark"] .no-docs {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .back-to-docs .btn {
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .back-to-docs .btn:hover {
+    background-color: var(--secondary-hover) !important;
+}
+
+/* 搜索结果页面特定样式 */
+[data-theme="dark"] .search-page {
+    background-color: var(--bg-color) !important;
+}
+
+[data-theme="dark"] .search-page-header {
+    background-color: var(--bg-secondary) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .search-page-title {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-page-description {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .advanced-search-form {
+    background-color: var(--bg-color) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .search-form-title {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-input-large {
+    background-color: var(--search-bg) !important;
+    border-color: var(--search-border) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-input-large:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px var(--search-focus) !important;
+    background-color: var(--bg-color) !important;
+}
+
+[data-theme="dark"] .search-button-large {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .search-button-large:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+[data-theme="dark"] .search-option-label {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-option-select {
+    background-color: var(--bg-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-help {
+    background-color: var(--import-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .search-help-title {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-help-list li {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .search-history {
+    background-color: var(--bg-color) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .search-history-title {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .clear-history-btn {
+    color: var(--danger-color) !important;
+}
+
+[data-theme="dark"] .clear-history-btn:hover {
+    background-color: var(--danger-bg) !important;
+}
+
+[data-theme="dark"] .search-history-item {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .search-history-item:hover {
+    background-color: var(--sidebar-hover) !important;
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .search-history-item .remove {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .search-results-stats {
+    background-color: var(--bg-color) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .search-results-count {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-results-count strong {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .search-sort-label {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-sort-select {
+    background-color: var(--bg-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-results-page {
+    background-color: var(--bg-color) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .search-result-item-page {
+    border-bottom-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .search-result-item-page:hover {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .search-result-title-page {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-result-description-page {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .search-result-snippet {
+    background-color: var(--bg-secondary) !important;
+    border-left-color: var(--primary-color) !important;
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .search-result-snippet mark {
+    background-color: var(--highlight-bg) !important;
+    color: var(--highlight-text) !important;
+}
+
+[data-theme="dark"] .search-result-badge {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .search-result-score {
+    background-color: var(--primary-light) !important;
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .no-search-results {
+    background-color: var(--bg-color) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .no-results-title {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .no-results-description {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .no-results-suggestions {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .no-results-suggestions h4 {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .no-results-suggestions li {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .search-suggestions-page {
+    background-color: var(--bg-color) !important;
+    border-color: var(--border-color) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+[data-theme="dark"] .suggestion-item {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .suggestion-item:hover {
+    background-color: var(--sidebar-hover) !important;
+}

@@ -446,166 +446,7 @@
             }
         }
 
-        /* 暗色主题样式 */
-        [data-theme="dark"] .folder-hero {
-            background: linear-gradient(0deg, #0d4f1f, #1e7e34, #0d4f1f);
-        }
-
-        [data-theme="dark"] .breadcrumb {
-            background-color: var(--bg-secondary);
-            border-bottom-color: var(--border-color);
-        }
-
-        [data-theme="dark"] .breadcrumb-item a {
-            color: var(--primary-color);
-        }
-
-        [data-theme="dark"] .breadcrumb-item.active {
-            color: var(--text-muted);
-        }
-
-        [data-theme="dark"] .folder-title {
-            color: var(--text-color);
-        }
-
-        [data-theme="dark"] .folder-description {
-            color: var(--text-secondary);
-        }
-
-        [data-theme="dark"] .filter-container {
-            background-color: var(--bg-secondary);
-        }
-
-        [data-theme="dark"] .filter-group label {
-            color: var(--text-color);
-        }
-
-        [data-theme="dark"] .filter-select {
-            background-color: var(--bg-color);
-            border-color: var(--border-color);
-            color: var(--text-color);
-        }
-
-        [data-theme="dark"] .filter-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px var(--search-focus);
-        }
-
-        [data-theme="dark"] .view-toggle button {
-            background-color: var(--bg-color);
-            border-color: var(--border-color);
-            color: var(--text-color);
-        }
-
-        [data-theme="dark"] .view-toggle button.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        [data-theme="dark"] .search-section {
-            background-color: var(--bg-secondary);
-        }
-
-        [data-theme="dark"] .search-input {
-            background-color: var(--bg-color);
-            border-color: var(--border-color);
-            color: var(--text-color);
-        }
-
-        [data-theme="dark"] .search-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px var(--search-focus);
-        }
-
-        [data-theme="dark"] .search-results {
-            background-color: var(--bg-color);
-            border-color: var(--border-color);
-        }
-
-        [data-theme="dark"] .search-result-item {
-            border-bottom-color: var(--border-color);
-        }
-
-        [data-theme="dark"] .search-result-item:hover {
-            background-color: var(--bg-secondary);
-        }
-
-        [data-theme="dark"] .doc-card {
-            background-color: var(--bg-color);
-            box-shadow: var(--shadow);
-        }
-
-        [data-theme="dark"] .doc-card:hover {
-            box-shadow: var(--shadow-lg);
-        }
-
-        [data-theme="dark"] .doc-card-header {
-            border-bottom-color: var(--border-color);
-        }
-
-        [data-theme="dark"] .doc-title {
-            color: var(--text-color);
-        }
-
-        [data-theme="dark"] .doc-meta {
-            color: var(--text-secondary);
-        }
-
-        [data-theme="dark"] .doc-description {
-            color: var(--text-secondary);
-        }
-
-        [data-theme="dark"] .doc-tag {
-            background-color: var(--bg-secondary);
-            color: var(--text-secondary);
-        }
-
-        [data-theme="dark"] .doc-card-footer {
-            background-color: var(--bg-secondary);
-        }
-
-        [data-theme="dark"] .doc-author {
-            color: var(--text-secondary);
-        }
-
-        [data-theme="dark"] .doc-link {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        [data-theme="dark"] .doc-link:hover {
-            background-color: var(--primary-hover);
-        }
-
-        [data-theme="dark"] .no-docs {
-            color: var(--text-secondary);
-        }
-
-        [data-theme="dark"] .back-to-docs .btn {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        [data-theme="dark"] .back-to-docs .btn:hover {
-            background-color: var(--secondary-hover);
-        }
-
-        /* 暗色主题难度徽章 */
-        [data-theme="dark"] .difficulty-badge.beginner {
-            background-color: #1e4a2a;
-            color: #4caf50;
-        }
-
-        [data-theme="dark"] .difficulty-badge.intermediate {
-            background-color: #4a401a;
-            color: #ffc107;
-        }
-
-        [data-theme="dark"] .difficulty-badge.advanced {
-            background-color: #4a1a1a;
-            color: #f44336;
-        }
+        /* 文件夹页面特定样式已移至 theme-base.css，使用CSS变量系统 */
     </style>
 </head>
 
@@ -626,7 +467,7 @@
                     <ul class="nav-list">
                         <li class="nav-item"><a href="../index.html" class="nav-link">首页</a></li>
                         <li class="nav-item"><a href="index.html" class="nav-link">文档</a></li>
-                        <li class="nav-item"><a href="viewer.html" class="nav-link">文档查看器</a></li>
+                        <li class="nav-item"><a href="editor.html" class="nav-link">文档编辑器</a></li>
                         <li class="nav-item"><a href="https://github.com/DPapyru/DPapyru.github.io" class="nav-link"
                                 target="_blank">GitHub</a></li>
                         <li class="nav-item" id="theme-toggle-container">
@@ -753,7 +594,7 @@
                     <ul>
                         <li><a href="../index.html">首页</a></li>
                         <li><a href="index.html">文档</a></li>
-                        <li><a href="viewer.html">文档查看器</a></li>
+                        <li><a href="editor.html">文档编辑器</a></li>
                         <li><a href="https://github.com/DPapyru/DPapyru.github.io" target="_blank">GitHub</a></li>
                     </ul>
                 </div>
@@ -801,108 +642,24 @@
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
 
-            // 初始化主题切换功能
+            // 初始化主题切换功能 - 使用标准的ThemeToggle类
             if (typeof ThemeToggle !== 'undefined') {
-                // 如果ThemeToggle类已定义，但我们需要确保它不会创建新的按钮
-                // 直接使用现有的按钮
-                const themeToggleBtn = document.getElementById('theme-toggle-container');
-                if (themeToggleBtn) {
-                    const button = themeToggleBtn.querySelector('.theme-toggle-btn');
-                    if (button) {
-                        // 移除可能存在的事件监听器
-                        const newButton = button.cloneNode(true);
-                        button.parentNode.replaceChild(newButton, button);
-                        
-                        // 添加我们自己的事件监听器
-                        newButton.addEventListener('click', function() {
-                            const currentTheme = document.documentElement.getAttribute('data-theme');
-                            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                            
-                            if (newTheme === 'dark') {
-                                document.documentElement.setAttribute('data-theme', 'dark');
-                            } else {
-                                document.documentElement.removeAttribute('data-theme');
-                            }
-                            
-                            // 更新按钮文本和图标
-                            const icon = newButton.querySelector('.theme-icon');
-                            const text = newButton.querySelector('.theme-text');
-                            if (icon && text) {
-                                if (newTheme === 'dark') {
-                                    icon.textContent = '☀️';
-                                    text.textContent = '浅色';
-                                } else {
-                                    icon.textContent = '🌙';
-                                    text.textContent = '深色';
-                                }
-                            }
-                            
-                            // 保存主题偏好
-                            localStorage.setItem('theme', newTheme);
-                        });
-                        
-                        // 初始化按钮状态
-                        const icon = newButton.querySelector('.theme-icon');
-                        const text = newButton.querySelector('.theme-text');
-                        if (icon && text) {
-                            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                                icon.textContent = '☀️';
-                                text.textContent = '浅色';
-                            } else {
-                                icon.textContent = '🌙';
-                                text.textContent = '深色';
-                            }
-                        }
-                    }
-                }
-                
-                // 创建ThemeToggle实例，但禁用按钮创建
+                // 创建ThemeToggle实例，但禁用按钮创建以使用页面中已有的按钮
                 const themeToggle = new ThemeToggle();
                 // 重写createThemeToggleButton方法，防止创建新按钮
                 themeToggle.createThemeToggleButton = function() {
                     // 什么都不做，因为我们已经有按钮了
                 };
-            } else {
-                // 如果ThemeToggle类未定义，添加简单的主题切换功能
-                const themeToggleBtn = document.getElementById('theme-toggle-container');
-                if (themeToggleBtn) {
-                    // 初始化按钮状态
-                    const icon = themeToggleBtn.querySelector('.theme-icon');
-                    const text = themeToggleBtn.querySelector('.theme-text');
-                    if (icon && text) {
-                        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                            icon.textContent = '☀️';
-                            text.textContent = '浅色';
-                        } else {
-                            icon.textContent = '🌙';
-                            text.textContent = '深色';
-                        }
-                    }
-
-                    themeToggleBtn.addEventListener('click', function() {
-                        const currentTheme = document.documentElement.getAttribute('data-theme');
-                        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                         
-                        if (newTheme === 'dark') {
-                            document.documentElement.setAttribute('data-theme', 'dark');
-                        } else {
-                            document.documentElement.removeAttribute('data-theme');
-                        }
-                         
-                        // 更新按钮文本和图标
-                        if (icon && text) {
-                            if (newTheme === 'dark') {
-                                icon.textContent = '☀️';
-                                text.textContent = '浅色';
-                            } else {
-                                icon.textContent = '🌙';
-                                text.textContent = '深色';
-                            }
-                        }
-                         
-                        // 保存主题偏好
-                        localStorage.setItem('theme', newTheme);
-                    });
+                
+                // 确保现有按钮与ThemeToggle类正确关联
+                const existingButton = document.querySelector('.theme-toggle-btn');
+                if (existingButton) {
+                    // 移除可能存在的事件监听器
+                    const newButton = existingButton.cloneNode(true);
+                    existingButton.parentNode.replaceChild(newButton, existingButton);
+                    
+                    // 添加ThemeToggle的事件处理
+                    newButton.addEventListener('click', () => themeToggle.toggleTheme());
                 }
             }
 
