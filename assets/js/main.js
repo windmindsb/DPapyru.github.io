@@ -593,6 +593,17 @@ function initMarkdownRenderer() {
                 .replace(/'/g, '&#39;');
         }
 
+        function normalizeMarkedArgs(href, title, text) {
+            if (href && typeof href === 'object') {
+                return {
+                    href: href.href,
+                    title: href.title,
+                    text: href.text || href.raw || ''
+                };
+            }
+            return { href, title, text };
+        }
+
         function isSafeUrl(href) {
             if (!href) return true;
             const trimmed = String(href).trim().toLowerCase();
@@ -611,16 +622,18 @@ function initMarkdownRenderer() {
             // 禁止 Markdown 原始 HTML
             renderer.html = (html) => escapeHtml(html);
             renderer.link = (href, title, text) => {
-                if (!isSafeUrl(href)) return escapeHtml(text || '');
-                const safeHref = escapeHtml(href);
-                const safeTitle = title ? ` title="${escapeHtml(title)}"` : '';
-                return `<a href="${safeHref}"${safeTitle}>${text || ''}</a>`;
+                const normalized = normalizeMarkedArgs(href, title, text);
+                if (!isSafeUrl(normalized.href)) return escapeHtml(normalized.text || '');
+                const safeHref = escapeHtml(normalized.href);
+                const safeTitle = normalized.title ? ` title="${escapeHtml(normalized.title)}"` : '';
+                return `<a href="${safeHref}"${safeTitle}>${normalized.text || ''}</a>`;
             };
             renderer.image = (href, title, text) => {
-                if (!isSafeUrl(href)) return '';
-                const safeSrc = escapeHtml(href);
-                const safeAlt = escapeHtml(text || '');
-                const safeTitle = title ? ` title="${escapeHtml(title)}"` : '';
+                const normalized = normalizeMarkedArgs(href, title, text);
+                if (!isSafeUrl(normalized.href)) return '';
+                const safeSrc = escapeHtml(normalized.href);
+                const safeAlt = escapeHtml(normalized.text || '');
+                const safeTitle = normalized.title ? ` title="${escapeHtml(normalized.title)}"` : '';
                 return `<img src="${safeSrc}" alt="${safeAlt}"${safeTitle} />`;
             };
         }

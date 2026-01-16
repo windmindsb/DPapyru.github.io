@@ -310,19 +310,26 @@
             gap: 0;
         }
 
-	        .quick-link-card {
-	            background-color: transparent !important;
-	            border-radius: 0 !important;
-	            padding: 16px 0;
-	            text-align: left;
-	            box-shadow: none !important;
-                border-bottom: 1px solid var(--border-color);
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-	            transition: background-color 0.2s ease;
-	        }
+        .quick-link-card {
+            background-color: transparent !important;
+            border-radius: 0 !important;
+            padding: 16px 0;
+            text-align: left;
+            box-shadow: none !important;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: background-color 0.2s ease;
+        }
+
+        .quick-link-text {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
 
 	        .quick-link-card:hover {
 	            transform: none;
@@ -340,11 +347,11 @@
 	            color: var(--text-color);
 	        }
 
-	        .quick-link-description {
-	            font-size: 0.9rem;
-	            color: var(--text-secondary);
-	            margin: 0;
-	        }
+        .quick-link-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
         
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -1199,40 +1206,41 @@
                     }
                 });
 
-                categoryContent.appendChild(docList);
-
                 const docPaths = categoryDocs.map(doc => doc.path || doc.filename).filter(Boolean);
                 const subfolderEntries = (window.FolderFilter && typeof window.FolderFilter.buildSubfolderEntries === 'function')
                     ? window.FolderFilter.buildSubfolderEntries(docPaths, categoryKey)
                     : [];
 
+                if (subfolderEntries.length === 0) {
+                    categoryContent.appendChild(docList);
+                }
+
                 if (subfolderEntries.length > 0) {
-                    const subfolderSection = document.createElement('div');
-                    subfolderSection.className = 'subfolder-section';
-
-                    const subfolderTitle = document.createElement('div');
-                    subfolderTitle.className = 'subfolder-title';
-                    subfolderTitle.textContent = '子目录';
-
                     const subfolderList = document.createElement('ul');
-                    subfolderList.className = 'subfolder-list';
+                    subfolderList.className = 'doc-list';
 
                     subfolderEntries.forEach(entry => {
                         const subfolderItem = document.createElement('li');
-                        subfolderItem.className = 'subfolder-item';
+                        subfolderItem.className = 'doc-item';
 
                         const subfolderLink = document.createElement('a');
-                        subfolderLink.className = 'subfolder-link';
+                        subfolderLink.className = 'doc-link';
                         subfolderLink.href = `folder.html?path=${encodeURIComponent(entry.path)}`;
-                        subfolderLink.textContent = esc(entry.label);
+
+                        subfolderLink.innerHTML = `
+                            <div class="doc-info">
+                                <div class="doc-title">${esc(entry.label)}</div>
+                                <div class="doc-meta">
+                                    <span>子目录</span>
+                                </div>
+                            </div>
+                        `;
 
                         subfolderItem.appendChild(subfolderLink);
                         subfolderList.appendChild(subfolderItem);
                     });
 
-                    subfolderSection.appendChild(subfolderTitle);
-                    subfolderSection.appendChild(subfolderList);
-                    categoryContent.appendChild(subfolderSection);
+                    categoryContent.appendChild(subfolderList);
                 }
                 categoryCard.appendChild(categoryHeader);
                 categoryCard.appendChild(categoryContent);
@@ -1358,8 +1366,10 @@
                 }
                 
                 quickLinkCard.innerHTML = `
-                    <h3 class="quick-link-title">${linkConfig.title}</h3>
-                    <p class="quick-link-description">${linkConfig.description}</p>
+                    <div class="quick-link-text">
+                        <h3 class="quick-link-title">${linkConfig.title}</h3>
+                        <p class="quick-link-description">${linkConfig.description}</p>
+                    </div>
                     <a href="${buttonLink}" class="btn btn-small ${linkConfig.buttonClass}"
                        ${linkConfig.action === 'community' ? 'target="_blank" rel="noopener noreferrer"' : ''}>
                         ${linkConfig.action === 'view-all' ? '查看索引' :

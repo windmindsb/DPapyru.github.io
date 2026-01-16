@@ -64,8 +64,13 @@
             });
     }
 
+    function hasSubfolders(docPaths, basePath) {
+        return buildSubfolderEntries(docPaths, basePath).length > 0;
+    }
+
     return {
         matchesFolderPath: matchesFolderPath,
-        buildSubfolderEntries: buildSubfolderEntries
+        buildSubfolderEntries: buildSubfolderEntries,
+        hasSubfolders: hasSubfolders
     };
 }));

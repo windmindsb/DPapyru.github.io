@@ -342,6 +342,17 @@
 	                        .replace(/'/g, '&#39;');
 	                }
 
+	                function normalizeMarkedArgs(href, title, text) {
+	                    if (href && typeof href === 'object') {
+	                        return {
+	                            href: href.href,
+	                            title: href.title,
+	                            text: href.text || href.raw || ''
+	                        };
+	                    }
+	                    return { href, title, text };
+	                }
+
 	                function isSafeUrl(href) {
 	                    if (!href) return true;
 	                    const trimmed = String(href).trim().toLowerCase();
@@ -362,11 +373,12 @@
 
 	                    // 过滤危险链接协议
 	                    renderer.link = (href, title, text) => {
-	                        if (!isSafeUrl(href)) return escapeHtml(text || '');
+	                        const normalized = normalizeMarkedArgs(href, title, text);
+	                        if (!isSafeUrl(normalized.href)) return escapeHtml(normalized.text || '');
 
-	                        const rawHref = String(href || '');
-	                        const safeText = text || '';
-	                        const safeTitle = title ? ` title="${escapeHtml(title)}"` : '';
+	                        const rawHref = String(normalized.href || '');
+	                        const safeText = normalized.text || '';
+	                        const safeTitle = normalized.title ? ` title="${escapeHtml(normalized.title)}"` : '';
 
 	                        if (rawHref.startsWith('#')) {
 	                            return `<a href="${escapeHtml(rawHref)}"${safeTitle}>${safeText}</a>`;
@@ -400,11 +412,12 @@
 	                    };
 
 	                    renderer.image = (href, title, text) => {
-	                        if (!isSafeUrl(href)) return '';
-	                        const resolvedSrc = resolveRelativeHref(href, CURRENT_DOC_PATH);
+	                        const normalized = normalizeMarkedArgs(href, title, text);
+	                        if (!isSafeUrl(normalized.href)) return '';
+	                        const resolvedSrc = resolveRelativeHref(normalized.href, CURRENT_DOC_PATH);
 	                        const safeSrc = escapeHtml(resolvedSrc);
-	                        const safeAlt = escapeHtml(text || '');
-	                        const safeTitle = title ? ` title="${escapeHtml(title)}"` : '';
+	                        const safeAlt = escapeHtml(normalized.text || '');
+	                        const safeTitle = normalized.title ? ` title="${escapeHtml(normalized.title)}"` : '';
 	                        return `<img src="${safeSrc}" alt="${safeAlt}"${safeTitle} loading="lazy" decoding="async" />`;
 	                    };
 	                }

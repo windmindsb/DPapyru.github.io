@@ -126,8 +126,7 @@
         }
 
         .subfolder-section {
-            margin: 10px auto 30px;
-            max-width: 900px;
+            margin: 0 0 20px;
             text-align: left;
             border-top: 1px solid var(--border-color);
             padding-top: 10px;
@@ -569,8 +568,6 @@
                     <!-- 文件夹标题和描述将通过JavaScript动态生成 -->
                 </div>
 
-                <div class="subfolder-section" id="subfolder-section"></div>
-
                 <!-- 过滤器和搜索区域 -->
                 <div class="search-section">
                     <div class="filter-container">
@@ -719,8 +716,6 @@
                 // 生成文件夹标题和描述
                 generateFolderHeader(folderPath);
 
-                // 生成子目录入口
-                generateSubfolderList(folderPath);
 
                 // 生成文档列表
                 // 注意：这里不调用 generateDocumentGrid，因为 initFilterAndSortFunctionality 会处理
@@ -1160,24 +1155,26 @@
 	            `;
 	        }
 
-        function generateSubfolderList(folderPath) {
-            const container = document.getElementById('subfolder-section');
-            if (!container) return;
+        function buildSubfolderSection(folderPath) {
+            const existingSection = document.getElementById('subfolder-section');
+            const container = existingSection || document.createElement('div');
 
+            container.id = 'subfolder-section';
+            container.className = 'subfolder-section';
             container.innerHTML = '';
+
+            if (container.parentNode) {
+                container.parentNode.removeChild(container);
+            }
 
             if (!folderPath || !window.FolderFilter ||
                 typeof window.FolderFilter.buildSubfolderEntries !== 'function') {
-                return;
+                return null;
             }
 
             const docPaths = FOLDER_DOCS.map(doc => doc.path || doc.filename).filter(Boolean);
             const entries = window.FolderFilter.buildSubfolderEntries(docPaths, folderPath);
-            if (entries.length === 0) return;
-
-            const title = document.createElement('div');
-            title.className = 'subfolder-title';
-            title.textContent = '子目录';
+            if (entries.length === 0) return null;
 
             const list = document.createElement('ul');
             list.className = 'subfolder-list';
@@ -1195,8 +1192,10 @@
                 list.appendChild(item);
             });
 
-            container.appendChild(title);
             container.appendChild(list);
+            container.style.gridColumn = '1 / -1';
+
+            return container;
         }
 
         // 生成文档列表
@@ -1215,7 +1214,10 @@
                 // 清空现有内容
                 docGrid.innerHTML = '';
 
-                if (FOLDER_DOCS.length === 0) {
+                const subfolderSection = buildSubfolderSection(CURRENT_FOLDER);
+                const hasSubfolders = !!subfolderSection;
+
+                if (FOLDER_DOCS.length === 0 && !hasSubfolders) {
                     // 显示无文档提示
                     docGrid.style.display = 'none';
                     noDocs.style.display = 'block';
@@ -1225,6 +1227,10 @@
                 // 显示文档网格
                 docGrid.style.display = 'grid';
                 noDocs.style.display = 'none';
+
+                if (hasSubfolders) {
+                    docGrid.appendChild(subfolderSection);
+                }
 
                 // 按排序字段排序文档
                 const sortedDocs = [...FOLDER_DOCS].sort((a, b) => {
@@ -1718,7 +1724,10 @@
             // 清空现有内容
             docGrid.innerHTML = '';
 
-            if (filteredDocs.length === 0) {
+            const subfolderSection = buildSubfolderSection(CURRENT_FOLDER);
+            const hasSubfolders = !!subfolderSection;
+
+            if (filteredDocs.length === 0 && !hasSubfolders) {
                 // 显示无文档提示
                 docGrid.style.display = 'none';
                 noDocs.style.display = 'block';
@@ -1732,6 +1741,10 @@
             // 显示文档网格
             docGrid.style.display = 'grid';
             noDocs.style.display = 'none';
+
+            if (hasSubfolders) {
+                docGrid.appendChild(subfolderSection);
+            }
 
             // 生成文档卡片
             filteredDocs.forEach(doc => {

@@ -702,6 +702,10 @@ body.viewer-page .tutorial-content {
     line-height: 1.6;
 }
 
+.hero-description p + p {
+    margin-top: 12px;
+}
+
 .hero-buttons {
     display: flex;
     gap: 15px;
@@ -1891,7 +1895,7 @@ body.viewer-page .tutorial-content {
 
 /* Markdown内容样式 */
 .markdown-content {
-    line-height: 1.8;
+    line-height: 1.65;
     font-size: 1.05rem;
 }
 
@@ -1901,8 +1905,8 @@ body.viewer-page .tutorial-content {
 .markdown-content h4,
 .markdown-content h5,
 .markdown-content h6 {
-    margin-top: 2.5em;
-    margin-bottom: 1.2em;
+    margin-top: 2em;
+    margin-bottom: 0.9em;
     font-weight: 600;
     line-height: 1.3;
     color: #2c3e50;
@@ -1973,23 +1977,23 @@ body.viewer-page .tutorial-content {
 }
 
 .markdown-content p {
-    margin-bottom: 1.3em;
+    margin-bottom: 1em;
     text-align: justify;
 }
 
 .markdown-content ul,
 .markdown-content ol {
-    margin-bottom: 1.3em;
+    margin-bottom: 1em;
     padding-left: 2.2em;
 }
 
 .markdown-content li {
-    margin-bottom: 0.6em;
+    margin-bottom: 0.45em;
 }
 
 .markdown-content blockquote {
-    margin: 1.8em 0;
-    padding: 1em 1.5em;
+    margin: 1.4em 0;
+    padding: 0.9em 1.3em;
     border-left: 4px solid #28a745;
     background-color: var(--import-color);
     color: var(--text-color);
@@ -2004,7 +2008,7 @@ body.viewer-page .tutorial-content {
 .markdown-content table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.8em 0;
+    margin: 1.4em 0;
     font-size: 0.95em;
     border-radius: 6px;
     overflow: hidden;
@@ -2036,7 +2040,7 @@ body.viewer-page .tutorial-content {
 .markdown-content img {
     max-width: 100%;
     height: auto;
-    margin: 1.8em 0;
+    margin: 1.4em 0;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -2048,22 +2052,22 @@ body.viewer-page .tutorial-content {
 }
 
 .markdown-content code {
-    background-color: #f8f9fa;
+    background-color: var(--code-bg);
     padding: 0.2em 0.5em;
     border-radius: 4px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.9em;
-    color: #e83e8c;
-    border: 1px solid #e9ecef;
+    color: var(--code-text);
+    border: 1px solid var(--code-border);
 }
 
 .markdown-content pre {
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background-color: var(--code-bg);
+    border: 1px solid var(--code-border);
     border-radius: 8px;
     padding: 1.2em;
     overflow-x: auto;
-    margin: 1.8em 0;
+    margin: 1.4em 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     position: relative;
 }
@@ -2073,8 +2077,8 @@ body.viewer-page .tutorial-content {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #e9ecef;
-    color: #6c757d;
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
     font-size: 0.75rem;
     padding: 2px 8px;
     border-radius: 0 8px 0 8px;
@@ -2093,8 +2097,8 @@ body.viewer-page .tutorial-content {
 .markdown-content hr {
     border: none;
     height: 2px;
-    background-color: #eee;
-    margin: 2em 0;
+    background-color: var(--border-color);
+    margin: 1.6em 0;
 }
 
 .markdown-content a {
@@ -2111,13 +2115,13 @@ body.viewer-page .tutorial-content {
     background-color: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
+    padding: 16px;
+    margin-bottom: 20px;
 }
 
 .table-of-contents h3 {
     margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 1.2rem;
     color: #333;
 }
@@ -2128,7 +2132,7 @@ body.viewer-page .tutorial-content {
 }
 
 .table-of-contents li {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .table-of-contents a {
@@ -2143,7 +2147,7 @@ body.viewer-page .tutorial-content {
 
 .table-of-contents ul ul {
     padding-left: 20px;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 /* 加载状态样式 */

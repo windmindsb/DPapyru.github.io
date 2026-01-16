@@ -242,7 +242,7 @@
 
 /* Markdown内容样式 */
 .markdown-content {
-    line-height: 1.8;
+    line-height: 1.65;
     font-size: 1.05rem;
     color: var(--text-color);
 }
@@ -253,8 +253,8 @@
 .markdown-content h4,
 .markdown-content h5,
 .markdown-content h6 {
-    margin-top: 2.5em;
-    margin-bottom: 1.2em;
+    margin-top: 2em;
+    margin-bottom: 0.9em;
     font-weight: 600;
     line-height: 1.3;
     color: var(--text-color);
@@ -325,23 +325,23 @@
 }
 
 .markdown-content p {
-    margin-bottom: 1.3em;
+    margin-bottom: 1em;
     text-align: justify;
 }
 
 .markdown-content ul,
 .markdown-content ol {
-    margin-bottom: 1.3em;
+    margin-bottom: 1em;
     padding-left: 2.2em;
 }
 
 .markdown-content li {
-    margin-bottom: 0.6em;
+    margin-bottom: 0.45em;
 }
 
 .markdown-content blockquote {
-    margin: 1.8em 0;
-    padding: 1em 1.5em;
+    margin: 1.4em 0;
+    padding: 0.9em 1.3em;
     border-left: 4px solid var(--primary-color);
     background-color: var(--bg-secondary);
     color: var(--text-secondary);
@@ -356,7 +356,7 @@
 .markdown-content table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.8em 0;
+    margin: 1.4em 0;
     font-size: 0.95em;
     border-radius: 6px;
     overflow: hidden;
@@ -388,7 +388,7 @@
 .markdown-content img {
     max-width: 100%;
     height: auto;
-    margin: 1.8em 0;
+    margin: 1.4em 0;
     border-radius: 6px;
     box-shadow: var(--shadow);
     transition: var(--transition);
@@ -415,7 +415,7 @@
     border-radius: 8px;
     padding: 1.2em;
     overflow-x: auto;
-    margin: 1.8em 0;
+    margin: 1.4em 0;
     box-shadow: var(--shadow-sm);
     position: relative;
 }
@@ -446,7 +446,7 @@
     border: none;
     height: 2px;
     background-color: var(--border-color);
-    margin: 2em 0;
+    margin: 1.6em 0;
 }
 
 .markdown-content a {
@@ -463,13 +463,13 @@
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
+    padding: 16px;
+    margin-bottom: 20px;
 }
 
 .table-of-contents h3 {
     margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 1.2rem;
     color: var(--text-color);
 }
@@ -480,7 +480,7 @@
 }
 
 .table-of-contents li {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .table-of-contents a {
@@ -495,7 +495,7 @@
 
 .table-of-contents ul ul {
     padding-left: 20px;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 /* 响应式设计 */
