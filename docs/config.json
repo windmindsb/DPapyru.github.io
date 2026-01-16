@@ -32,15 +32,15 @@
               "filename": "DPapyru-贡献者如何编写文章基础.md",
               "path": "怎么贡献/DPapyru-贡献者如何编写文章基础.md",
               "originalPath": "怎么贡献/DPapyru-贡献者如何编写文章基础.md",
-              "title": "贡献者怎么编写文章？",
+              "title": "如何贡献文章（详细指南）",
               "author": "小天使",
               "order": 999,
-              "description": "如何给这个教程网页进行一个文档编写？",
-              "last_updated": "2025-11-27",
-              "time": "5分钟",
+              "description": "如何在本仓库新增/修改教程文章，并通过构建与 CI 检查",
+              "last_updated": "2026-01-16",
+              "time": "10分钟",
               "difficulty": "beginner",
               "prev_chapter": "null",
-              "next_chapter": "TopicSystem使用指南.md",
+              "next_chapter": "null",
               "colors": null,
               "colorChange": null
             }
@@ -4674,18 +4674,18 @@
       "filename": "DPapyru-贡献者如何编写文章基础.md",
       "path": "怎么贡献/DPapyru-贡献者如何编写文章基础.md",
       "originalPath": "怎么贡献/DPapyru-贡献者如何编写文章基础.md",
-      "title": "贡献者怎么编写文章？",
+      "title": "如何贡献文章（详细指南）",
       "author": "小天使",
       "category": "怎么贡献",
       "topic": "article-contribution",
       "order": 999,
-      "time": "5分钟",
+      "time": "10分钟",
       "difficulty": "beginner",
       "prev_chapter": "null",
-      "next_chapter": "TopicSystem使用指南.md",
+      "next_chapter": "null",
       "colors": null,
       "colorChange": null,
-      "last_updated": "2025-11-27"
+      "last_updated": "2026-01-16"
     }
   ],
   "settings": {
